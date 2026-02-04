@@ -25,6 +25,24 @@ function DonateBlock() {
     )
 }
 
+const LS_INPROGRESS = "ppe_inprogress_v1";
+
+function saveInProgress(state) {
+  localStorage.setItem(LS_INPROGRESS, JSON.stringify(state));
+}
+
+function loadInProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(LS_INPROGRESS) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function clearInProgress() {
+  localStorage.removeItem(LS_INPROGRESS);
+}
+
 function fmtMMSS(totalSeconds) {
   const m = String(Math.floor(totalSeconds / 60)).padStart(2, '0')
   const s = String(totalSeconds % 60).padStart(2, '0')
@@ -117,6 +135,9 @@ export default function App() {
   const [startTs, setStartTs] = useState(null)
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SECONDS)
   const [history, setHistory] = useState(loadHistory())
+const [questionCount, setQuestionCount] = useState(TOTAL_QUESTIONS)
+const [selectedTopics, setSelectedTopics] = useState([]) // empty = all
+const [resumeSnapshot, setResumeSnapshot] = useState(null)
   const timerRef = useRef(null)
 
   useEffect(() => {
@@ -136,19 +157,70 @@ export default function App() {
     load()
   }, [])
 
-function startExam() {
-  const unique = dedupeByPrompt(bank)
-  const pick = shuffle(unique).slice(0, Math.min(TOTAL_QUESTIONS, unique.length))
+// Restore an in-progress attempt (if any)
+useEffect(() => {
+  const snap = loadInProgress()
+  if (snap && snap.exam?.length && typeof snap.idx === "number") {
+    setResumeSnapshot(snap)
+  }
+}, [])
+
+
+function startExam(opts = { fresh: true }) {
+  // If starting a brand-new attempt, clear any saved in-progress state
+  if (opts?.fresh) {
+    clearInProgress()
+    setResumeSnapshot(null)
+  }
+
+  const pool = poolForSelection
+  const n = Math.max(1, Math.min(questionCount || TOTAL_QUESTIONS, pool.length))
+  const pick = shuffle(pool).slice(0, n)
+
   setExam(pick)
   setIdx(0)
   setSelected(new Set())
   setLocked(false)
   setCorrectCount(0)
   setAttempted(0)
+
   const now = Date.now()
   setStartTs(now)
   setTimeLeft(TIME_LIMIT_SECONDS)
 }
+
+
+function resumeExam() {
+  const snap = loadInProgress()
+  if (!snap || !snap.exam?.length) {
+    setResumeSnapshot(null)
+    return
+  }
+  setExam(snap.exam)
+  setIdx(snap.idx ?? 0)
+  setSelected(new Set(snap.selected || []))
+  setLocked(!!snap.locked)
+  setCorrectCount(snap.correctCount ?? 0)
+  setAttempted(snap.attempted ?? 0)
+  setStartTs(snap.startTs ?? Date.now())
+  setTimeLeft(typeof snap.timeLeft === "number" ? snap.timeLeft : TIME_LIMIT_SECONDS)
+  setQuestionCount(snap.questionCount ?? TOTAL_QUESTIONS)
+  setSelectedTopics(snap.selectedTopics ?? [])
+}
+
+function abandonExam() {
+  clearInProgress()
+  setResumeSnapshot(null)
+  setStartTs(null)
+  setExam([])
+  setIdx(0)
+  setSelected(new Set())
+  setLocked(false)
+  setCorrectCount(0)
+  setAttempted(0)
+  setTimeLeft(TIME_LIMIT_SECONDS)
+}
+
 
   useEffect(() => {
     if (!startTs) return
@@ -164,7 +236,40 @@ function startExam() {
     if (startTs && timeLeft <= 0) setLocked(true)
   }, [timeLeft, startTs])
 
-  const q = exam[idx]
+// Persist progress so the user can resume if they close the app
+useEffect(() => {
+  if (!startTs || !exam.length) return
+  const state = {
+    v: 1,
+    startTs,
+    exam,
+    idx,
+    selected: Array.from(selected),
+    locked,
+    correctCount,
+    attempted,
+    timeLeft,
+    questionCount,
+    selectedTopics,
+  }
+  saveInProgress(state)
+}, [startTs, exam, idx, selected, locked, correctCount, attempted, timeLeft, questionCount, selectedTopics])
+
+// If time expires, keep the last saved state (so they can still view results)
+
+  const topics = useMemo(() => {
+  const set = new Set((bank || []).map((qq) => qq.topic).filter(Boolean))
+  return Array.from(set).sort((a, b) => a.localeCompare(b))
+}, [bank])
+
+const poolForSelection = useMemo(() => {
+  const unique = dedupeByPrompt(bank)
+  if (!selectedTopics.length) return unique
+  const sel = new Set(selectedTopics)
+  return unique.filter((qq) => sel.has(qq.topic))
+}, [bank, selectedTopics])
+
+const q = exam[idx]
   const isDone = useMemo(() => {
     if (!startTs) return false
     if (timeLeft <= 0) return true
@@ -202,6 +307,9 @@ function startExam() {
   }
 
   function finishAndLog() {
+    clearInProgress()
+    setResumeSnapshot(null)
+
     const durationSec = startTs ? Math.floor((Date.now() - startTs) / 1000) : 0
     const row = {
       timestamp: nowIsoLocal(),
@@ -265,7 +373,68 @@ function startExam() {
 
         {!loading && bank.length > 0 && !startTs && (
           <div className="start">
-            <button className="btn" onClick={startExam}>Start Practice</button>
+            <h2>Practice Settings</h2>
+
+            {resumeSnapshot && (
+              <div className="resume">
+                <p><b>Resume available:</b> You were on question {(resumeSnapshot.idx ?? 0) + 1} of {resumeSnapshot.exam?.length}.</p>
+                <div className="actions">
+                  <button className="btn" onClick={resumeExam}>Resume</button>
+                  <button className="btn ghost" onClick={() => startExam({ fresh: true })}>Start New</button>
+                </div>
+              </div>
+            )}
+
+            <div className="settings">
+              <label className="field">
+                <span className="label">Number of questions</span>
+                <input
+                  type="number"
+                  min="1"
+                  max={poolForSelection.length || 1}
+                  value={questionCount}
+                  onChange={(e) => setQuestionCount(parseInt(e.target.value || '1', 10))}
+                />
+                <span className="muted small">Max: {poolForSelection.length}</span>
+              </label>
+
+              <div className="field">
+                <span className="label">Topics</span>
+                <div className="topicRow">
+                  <label className="chk">
+                    <input
+                      type="checkbox"
+                      checked={selectedTopics.length === 0}
+                      onChange={() => setSelectedTopics([])}
+                    />
+                    <span>All topics</span>
+                  </label>
+                  <span className="muted small">{selectedTopics.length ? `${selectedTopics.length} selected` : `${topics.length} topics`}</span>
+                </div>
+
+                <div className="topics">
+                  {topics.map((t) => (
+                    <label className="chk" key={t}>
+                      <input
+                        type="checkbox"
+                        checked={selectedTopics.includes(t)}
+                        
+                        onChange={(e) => {
+                          const next = new Set(selectedTopics.length ? selectedTopics : [])
+                          if (e.target.checked) next.add(t)
+                          else next.delete(t)
+                          setSelectedTopics(Array.from(next))
+                        }}
+                      />
+                      <span>{t}</span>
+                    </label>
+                  ))}
+                </div>
+                <p className="muted small">Tip: Uncheck “All topics” by selecting at least one topic.</p>
+              </div>
+            </div>
+
+            <button className="btn" onClick={() => startExam({ fresh: true })}>Start Practice</button>
             <p className="hint">Tip: On your phone, open the site and “Add to Home Screen.”</p>
 
             <section className="history">
@@ -369,7 +538,7 @@ function startExam() {
             <p className="muted">Attempts are saved locally in your browser (localStorage).</p>
             <div className="actions">
               <button className="btn" onClick={finishAndLog}>Save Attempt</button>
-              <button className="btn ghost" onClick={() => { setStartTs(null); setExam([]); }}>Back</button>
+              <button className="btn ghost" onClick={abandonExam}>Back</button>
             </div>
 
             <DonateBlock />
