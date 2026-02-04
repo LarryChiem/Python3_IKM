@@ -115,18 +115,19 @@ export default function App() {
     load()
   }, [])
 
-  function startExam() {
-    const pick = shuffle(bank).slice(0, Math.min(TOTAL_QUESTIONS, bank.length))
-    setExam(pick)
-    setIdx(0)
-    setSelected(new Set())
-    setLocked(false)
-    setCorrectCount(0)
-    setAttempted(0)
-    const now = Date.now()
-    setStartTs(now)
-    setTimeLeft(TIME_LIMIT_SECONDS)
-  }
+function startExam() {
+  const unique = dedupeByPrompt(bank)
+  const pick = shuffle(unique).slice(0, Math.min(TOTAL_QUESTIONS, unique.length))
+  setExam(pick)
+  setIdx(0)
+  setSelected(new Set())
+  setLocked(false)
+  setCorrectCount(0)
+  setAttempted(0)
+  const now = Date.now()
+  setStartTs(now)
+  setTimeLeft(TIME_LIMIT_SECONDS)
+}
 
   useEffect(() => {
     if (!startTs) return
