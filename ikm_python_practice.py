@@ -1,849 +1,959 @@
 #!/usr/bin/env python3
-"""
-Python 3 Practice Assessment (original content; not IKM questions)
-
-Features:
-- 54 questions per run (sampled from a 110+ question bank)
-- 135-minute time limit
-- Single-choice + multi-select
-- Topic breakdown
-- Review missed questions at end (optional)
-"""
-
 from __future__ import annotations
 
+from datetime import datetime
+import csv
+import os
 import random
 import time
 from dataclasses import dataclass
 from typing import List, Set, Dict, Tuple, Optional
 
+# Optional plotting (pip install matplotlib)
+try:
+    import matplotlib.pyplot as plt
+except Exception:
+    plt = None
 
 TOTAL_QUESTIONS = 54
-TIME_LIMIT_SECONDS = 135 * 60  # 135 minutes
-REVIEW_MISSED_AT_END = True
-
+TIME_LIMIT_SECONDS = 135 * 60
 LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+RESULTS_CSV = "practice_results.csv"
+PROGRESS_PNG = "practice_progress.png"
 
 
 @dataclass(frozen=True)
 class Question:
     prompt: str
-    options: List[str]          # A, B, C, ...
-    correct: Set[int]           # indexes
-    multi_select: bool
+    options: List[str]
+    correct: Set[int]
     topic: str
-    explanation: str = ""       # short, for learning
+    explanations: Dict[int, str]
+
+    @property
+    def multi_select(self) -> bool:
+        return len(self.correct) > 1
 
 
-def idxs_to_letters(idxs: Set[int]) -> str:
-    return ",".join(LETTERS[i] for i in sorted(idxs))
+# ---------------- Utility ----------------
 
-
-def parse_answer(raw: str, multi_select: bool, num_options: int) -> Optional[Set[int]]:
-    s = raw.strip().upper()
-    if not s:
+def parse_answer(raw: str, num_options: int) -> Optional[Set[int]]:
+    raw = raw.strip().upper().replace(" ", "")
+    if raw == "Q":
+        return set([-1])
+    if not raw:
         return None
-    if s.lower() == "q":
-        return set([-1])  # sentinel
 
-    # Normalize separators; allow "AC" for multi-select
-    s = s.replace(" ", "").replace(";", ",").replace("/", ",").replace("|", ",")
-    if multi_select:
-        if "," not in s and len(s) > 1:
-            parts = list(s)
-        else:
-            parts = [p for p in s.split(",") if p]
-    else:
-        parts = [s[0]]
-
-    chosen: Set[int] = set()
+    parts = raw.split(",") if "," in raw else list(raw)
+    chosen = set()
     for p in parts:
-        if len(p) != 1:
-            return None
         if p not in LETTERS[:num_options]:
             return None
         chosen.add(LETTERS.index(p))
-
-    if not multi_select and len(chosen) != 1:
-        return None
     return chosen
 
 
 def time_left(start: float) -> int:
-    elapsed = int(time.time() - start)
-    return max(0, TIME_LIMIT_SECONDS - elapsed)
+    return max(0, TIME_LIMIT_SECONDS - int(time.time() - start))
 
 
-def fmt_mmss(seconds: int) -> str:
-    m = seconds // 60
-    s = seconds % 60
-    return f"{m:02d}:{s:02d}"
+def mmss(sec: int) -> str:
+    return f"{sec//60:02d}:{sec%60:02d}"
 
 
-def q(prompt: str, options: List[str], correct_letters: str, topic: str, explanation: str = "") -> Question:
-    correct_set = set()
-    for ch in correct_letters.replace(" ", "").split(","):
-        ch = ch.strip().upper()
-        if not ch:
-            continue
-        correct_set.add(LETTERS.index(ch))
-    multi = len(correct_set) > 1
-    return Question(prompt=prompt, options=options, correct=correct_set, multi_select=multi, topic=topic, explanation=explanation)
+# ---------------- Question Bank ----------------
 
-
-def build_bank() -> List[Question]:
+def bank() -> List[Question]:
     B: List[Question] = []
 
-    # ---------------- Basics & Operators ----------------
-    B.append(q(
-        "What is the output?\n\nprint(type(3/2))",
-        ["<class 'int'>", "<class 'float'>", "<class 'decimal.Decimal'>", "TypeError"],
-        "B", "Basics",
-        "In Python 3, / always produces float."
-    ))
-    B.append(q(
-        "Which statement is TRUE about '==' and 'is'?",
-        ["'is' checks value equality; '==' checks identity",
-         "'==' checks value equality; 'is' checks identity",
-         "'is' and '==' are always interchangeable",
-         "'is' is for strings only"],
-        "B", "Basics",
-        "'is' compares object identity; '==' compares value equality."
-    ))
-    B.append(q(
-        "What does this print?\n\nprint(0.1 + 0.2 == 0.3)",
-        ["True", "False", "Raises ValueError", "Depends on OS"],
-        "B", "Numerics",
-        "Floating-point rounding makes 0.1+0.2 not exactly 0.3."
-    ))
-    B.append(q(
-        "What does this print?\n\nprint(5 // 2, -5 // 2)",
-        ["2 -2", "2 -3", "2 3", "2 -1"],
-        "B", "Numerics",
-        "Floor division rounds down (toward -infinity)."
-    ))
-    B.append(q(
-        "Which are valid dictionary keys? (Select ALL that apply)",
-        ["('a', 1)", "['a', 1]", "{'a': 1}", "42"],
-        "A,D", "Data Structures",
-        "Keys must be hashable/immutable; tuples (if hashable) and ints are fine."
+    # 1
+    B.append(Question(
+        prompt="What is the output?\n\nprint(type(3/2))",
+        options=["<class 'int'>", "<class 'float'>", "<class 'decimal.Decimal'>", "TypeError"],
+        correct={1},
+        topic="Basics",
+        explanations={
+            0: "Wrong. / always returns a float in Python 3.",
+            1: "Correct. 3/2 evaluates to 1.5 (float).",
+            2: "Wrong. Decimal is only used if explicitly created.",
+            3: "Wrong. No exception is raised."
+        }
     ))
 
-    # ---------------- Strings / Bytes ----------------
-    B.append(q(
-        "What is the output?\n\nprint('a' * 3)",
-        ["aaa", "a3", "Error", "['a','a','a']"],
-        "A", "Strings"
-    ))
-    B.append(q(
-        "What is printed?\n\nprint(','.join(['a', 'b', 'c']))",
-        ["a b c", "a,b,c", "['a','b','c']", "TypeError"],
-        "B", "Strings"
-    ))
-    B.append(q(
-        "Which are TRUE about Python strings? (Select ALL that apply)",
-        ["Strings are mutable", "Strings are sequences", "Strings support slicing", "Strings are always interned"],
-        "B,C", "Strings",
-        "Strings are immutable sequences; interning is an optimization not guaranteed."
-    ))
-    B.append(q(
-        "What is the type of b'abc'?",
-        ["str", "bytes", "bytearray", "memoryview"],
-        "B", "Strings"
-    ))
-    B.append(q(
-        "What does this print?\n\nprint('hello'[:3])",
-        ["hel", "ell", "llo", "IndexError"],
-        "A", "Strings"
-    ))
-    B.append(q(
-        "Which expression converts bytes to str assuming UTF-8?",
-        ["bytes('x')", "b.decode('utf-8')", "str(b, 'bytes')", "b.encode('utf-8')"],
-        "B", "Strings",
-        "decode converts bytes -> str; encode converts str -> bytes."
+    # 2
+    B.append(Question(
+        prompt="Which statement about '==' and 'is' is TRUE?",
+        options=["'is' compares values", "'==' compares identity", "'==' compares values; 'is' compares identity", "They are interchangeable"],
+        correct={2},
+        topic="Basics",
+        explanations={
+            0: "Wrong. 'is' checks identity (same object).",
+            1: "Wrong. '==' checks value equality.",
+            2: "Correct. Value vs identity is the key distinction.",
+            3: "Wrong. They are not interchangeable."
+        }
     ))
 
-    # ---------------- Lists / Tuples / Sets ----------------
-    B.append(q(
-        "What is the output?\n\nx = (1)\nprint(type(x))",
-        ["<class 'tuple'>", "<class 'int'>", "<class 'list'>", "<class 'float'>"],
-        "B", "Sequences",
-        "(1) is just 1; a 1-tuple is (1,)."
-    ))
-    B.append(q(
-        "What is the output?\n\nx = (1,)\nprint(type(x))",
-        ["<class 'tuple'>", "<class 'int'>", "<class 'list'>", "<class 'float'>"],
-        "A", "Sequences"
-    ))
-    B.append(q(
-        "What does this print?\n\nx = [1,2,3]\ny = x\nx.append(4)\nprint(y)",
-        ["[1,2,3]", "[1,2,3,4]", "[4]", "NameError"],
-        "B", "References",
-        "y references the same list as x."
-    ))
-    B.append(q(
-        "What does this print?\n\nx = [1,2,3]\ny = x[:] \nx.append(4)\nprint(y)",
-        ["[1,2,3,4]", "[1,2,3]", "[]", "TypeError"],
-        "B", "References",
-        "Slicing makes a shallow copy of the list."
-    ))
-    B.append(q(
-        "Which are valid ways to copy list a? (Select ALL that apply)",
-        ["a.copy()", "list(a)", "a[:]", "copy(a)"],
-        "A,B,C", "Data Structures",
-        "copy(a) isn't a builtin; you'd need copy.copy from the copy module."
-    ))
-    B.append(q(
-        "What is printed?\n\nprint({1,2,2,3})",
-        ["{1, 2, 2, 3}", "{1, 2, 3}", "[1,2,3]", "Error"],
-        "B", "Data Structures",
-        "Sets remove duplicates."
-    ))
-    B.append(q(
-        "What does this print?\n\nx = [1,2,3]\nprint(x.pop())\nprint(x)",
-        ["1 then [2,3]", "3 then [1,2]", "3 then [1,2,3]", "TypeError"],
-        "B", "Data Structures"
-    ))
-    B.append(q(
-        "Which method adds an element to a set?",
-        ["append", "add", "push", "insert"],
-        "B", "Data Structures"
-    ))
-    B.append(q(
-        "Which are TRUE about tuples? (Select ALL that apply)",
-        ["Tuples are immutable", "Tuples can contain mutable objects", "Tuples can be dict keys if all items are hashable", "Tuples are always sorted"],
-        "A,B,C", "Data Structures"
+    # 3
+    B.append(Question(
+        prompt="What does this print?\n\nprint(0.1 + 0.2 == 0.3)",
+        options=["True", "False", "TypeError", "Depends on OS"],
+        correct={1},
+        topic="Numerics",
+        explanations={
+            0: "Wrong. Floating-point rounding prevents exact equality here.",
+            1: "Correct. 0.1+0.2 is not exactly 0.3 in binary floating point.",
+            2: "Wrong. No exception is raised.",
+            3: "Wrong. This behavior is consistent across platforms."
+        }
     ))
 
-    # ---------------- Dicts / Comprehensions ----------------
-    B.append(q(
-        "What is the result of:\n\n{n: n*n for n in range(3)}",
-        ["{0,1,4}", "{0:0, 1:1, 2:4}", "[(0,0),(1,1),(2,4)]", "SyntaxError"],
-        "B", "Comprehensions"
-    ))
-    B.append(q(
-        "What does dict.get(key, default) do when key is missing?",
-        ["Raises KeyError", "Returns None always", "Returns default (or None if not provided)", "Adds key with default"],
-        "C", "Data Structures"
-    ))
-    B.append(q(
-        "What is printed?\n\nd = {'a': 1}\nprint(d.setdefault('b', 2), d)",
-        ["2 {'a':1, 'b':2}", "None {'a':1}", "KeyError", "2 {'a':1}"],
-        "A", "Data Structures",
-        "setdefault inserts the key with default if missing, and returns the value."
-    ))
-    B.append(q(
-        "Which comprehension creates a set?",
-        ["(x for x in range(3))", "[x for x in range(3)]", "{x for x in range(3)}", "{x: x for x in range(3)}"],
-        "C", "Comprehensions"
-    ))
-    B.append(q(
-        "What does this print?\n\nprint({}.fromkeys(['a','b'], []))",
-        ["{'a': [], 'b': []} with independent lists", "SyntaxError", "TypeError", "Both keys share the same list object"],
-        "D", "Pitfalls",
-        "fromkeys uses the same value object for all keys unless you create per-key values."
+    # 4
+    B.append(Question(
+        prompt="Which values are falsy in Python? (Select ALL that apply)",
+        options=["0", "''", "[]", "'0'"],
+        correct={0, 1, 2},
+        topic="Truthiness",
+        explanations={
+            0: "Correct. Numeric zero is falsy.",
+            1: "Correct. Empty string is falsy.",
+            2: "Correct. Empty list is falsy.",
+            3: "Wrong. Non-empty strings are truthy even if they look like zero."
+        }
     ))
 
-    # ---------------- Truthiness ----------------
-    B.append(q(
-        "What does this print?\n\nprint(bool([]), bool([0]))",
-        ["False False", "True False", "False True", "True True"],
-        "C", "Truthiness"
-    ))
-    B.append(q(
-        "Which values are falsy in Python? (Select ALL that apply)",
-        ["0", "''", "[]", "'0'"],
-        "A,B,C", "Truthiness"
-    ))
-
-    # ---------------- Functions / Args ----------------
-    B.append(q(
-        "What does this print?\n\ndef f(x, acc=[]):\n    acc.append(x)\n    return acc\n\nprint(f(1))\nprint(f(2))",
-        ["[1] then [2]", "[1] then [1, 2]", "[1] then [1]", "TypeError"],
-        "B", "Functions",
-        "Default args are evaluated once at definition time."
-    ))
-    B.append(q(
-        "Which call passes 3 as 'c'?\n\ndef f(a, b=2, *, c=3):\n    return a+b+c",
-        ["f(1, 2, 3)", "f(1, c=3)", "f(1, 2, c=3)", "f(a=1, 2, c=3)"],
-        "B,C", "Functions",
-        "c is keyword-only due to '*'."
-    ))
-    B.append(q(
-        "What does this print?\n\ndef g(*args, **kwargs):\n    return args, kwargs\n\nprint(g(1,2,x=3))",
-        ["((1,2), {'x':3})", "([1,2], {'x':3})", "(1,2,{'x':3})", "TypeError"],
-        "A", "Functions"
-    ))
-    B.append(q(
-        "What does this print?\n\ndef f():\n    return\n\nprint(f())",
-        ["prints nothing", "prints False", "prints None", "SyntaxError"],
-        "C", "Functions"
+    # 5
+    B.append(Question(
+        prompt="What does this print?\n\nprint(bool([0]))",
+        options=["True", "False", "TypeError", "None"],
+        correct={0},
+        topic="Truthiness",
+        explanations={
+            0: "Correct. Any non-empty list is truthy.",
+            1: "Wrong. The list is not empty.",
+            2: "Wrong. bool(list) is valid.",
+            3: "Wrong. bool returns True/False."
+        }
     ))
 
-    # ---------------- Scope / Closures ----------------
-    B.append(q(
-        "What is printed?\n\nx = 10\n\ndef g():\n    x = 5\n\ng()\nprint(x)",
-        ["5", "10", "UnboundLocalError", "NameError"],
-        "B", "Scope"
-    ))
-    B.append(q(
-        "Which keyword assigns to a variable in an enclosing (non-global) scope?",
-        ["global", "static", "nonlocal", "outer"],
-        "C", "Scope"
-    ))
-    B.append(q(
-        "What happens?\n\nx = 1\n\ndef h():\n    print(x)\n    x = 2\n\nh()",
-        ["Prints 1", "Prints 2", "UnboundLocalError", "NameError"],
-        "C", "Scope",
-        "Assignment makes x local; read before assignment triggers UnboundLocalError."
+    # 6
+    B.append(Question(
+        prompt="Which are valid dictionary keys? (Select ALL that apply)",
+        options=["('a', 1)", "['a', 1]", "{'a': 1}", "42"],
+        correct={0, 3},
+        topic="Data Structures",
+        explanations={
+            0: "Correct. Tuples are hashable if elements are hashable.",
+            1: "Wrong. Lists are mutable → unhashable.",
+            2: "Wrong. Dicts are mutable → unhashable.",
+            3: "Correct. Integers are hashable."
+        }
     ))
 
-    # ---------------- Iterators / Generators ----------------
-    B.append(q(
-        "Which create a generator? (Select ALL that apply)",
-        ["(x*x for x in range(3))", "[x*x for x in range(3)]", "def h():\n    yield 1", "{x*x for x in range(3)}"],
-        "A,C", "Iterators/Generators"
-    ))
-    B.append(q(
-        "What is printed?\n\nit = iter([1,2])\nprint(next(it))\nprint(next(it))",
-        ["1 then 2", "2 then 1", "1 then 1", "StopIteration immediately"],
-        "A", "Iterators/Generators"
-    ))
-    B.append(q(
-        "What happens on the third next()?\n\nit = iter([1,2])\nnext(it)\nnext(it)\nnext(it)",
-        ["Returns None", "Raises StopIteration", "Loops back to start", "TypeError"],
-        "B", "Iterators/Generators"
+    # 7
+    B.append(Question(
+        prompt="What does this print?\n\nx = [1,2,3]\ny = x\nx.append(4)\nprint(y)",
+        options=["[1,2,3]", "[1,2,3,4]", "[4]", "NameError"],
+        correct={1},
+        topic="References",
+        explanations={
+            0: "Wrong. y references the same list as x.",
+            1: "Correct. Both variables point to the same list object.",
+            2: "Wrong. append mutates the list; it doesn’t replace it with [4].",
+            3: "Wrong. No variable is missing."
+        }
     ))
 
-    # ---------------- Sorting ----------------
-    B.append(q(
-        "What is the output?\n\nprint(sorted(['10','2','1']))",
-        ["['1','2','10']", "['10','1','2']", "['10','2','1']", "TypeError"],
-        "B", "Sorting",
-        "Strings sort lexicographically."
-    ))
-    B.append(q(
-        "Which sorted call sorts numbers by absolute value?",
-        ["sorted(nums, key=abs)", "sorted(abs(nums))", "sorted(nums).abs()", "sort(nums, abs)"],
-        "A", "Sorting"
-    ))
-    B.append(q(
-        "In list.sort(), what does 'reverse=True' do?",
-        ["Sorts by reverse key", "Sorts descending", "Randomizes ties", "Sorts by type"],
-        "B", "Sorting"
+    # 8
+    B.append(Question(
+        prompt="What does this print?\n\nx = [1,2,3]\ny = x[:]\nx.append(4)\nprint(y)",
+        options=["[1,2,3,4]", "[1,2,3]", "[]", "TypeError"],
+        correct={1},
+        topic="References",
+        explanations={
+            0: "Wrong. y is a copy; it doesn't see x's append.",
+            1: "Correct. Slicing creates a shallow copy of the list.",
+            2: "Wrong. The copy contains elements.",
+            3: "Wrong. This is valid Python."
+        }
     ))
 
-    # ---------------- Exceptions ----------------
-    B.append(q(
-        "Purpose of try/else?",
-        ["Runs if exception occurs", "Runs only if no exception occurs", "Runs regardless", "Runs only with finally"],
-        "B", "Exceptions"
-    ))
-    B.append(q(
-        "What happens here?\n\ntry:\n    1/0\nfinally:\n    print('done')",
-        ["Prints done then continues normally", "Prints done then raises ZeroDivisionError", "Raises before printing", "SyntaxError"],
-        "B", "Exceptions"
-    ))
-    B.append(q(
-        "Which exception is raised for missing dict key using d[key]?",
-        ["IndexError", "KeyError", "ValueError", "AttributeError"],
-        "B", "Exceptions"
-    ))
-    B.append(q(
-        "Which are valid exception base classes? (Select ALL that apply)",
-        ["BaseException", "Exception", "Error", "Throwable"],
-        "A,B", "Exceptions"
-    ))
-    B.append(q(
-        "What does 'raise' with no args do inside an except block?",
-        ["Raises SyntaxError", "Re-raises the current exception", "Raises None", "Clears the exception"],
-        "B", "Exceptions"
+    # 9
+    B.append(Question(
+        prompt="What is printed?\n\nx = (1)\nprint(type(x))",
+        options=["<class 'tuple'>", "<class 'int'>", "<class 'list'>", "<class 'float'>"],
+        correct={1},
+        topic="Sequences",
+        explanations={
+            0: "Wrong. Parentheses alone do not make a tuple.",
+            1: "Correct. (1) is just the integer 1.",
+            2: "Wrong. Lists use square brackets.",
+            3: "Wrong. No float conversion occurs."
+        }
     ))
 
-    # ---------------- Files / Context managers ----------------
-    B.append(q(
-        "Which is TRUE about 'with open(...) as f:'?",
-        ["Prevents buffering", "Automatically closes file even if exceptions occur", "Makes reads faster", "Disables exceptions"],
-        "B", "IO"
-    ))
-    B.append(q(
-        "Which mode opens a file for appending text?",
-        ["'r'", "'w'", "'a'", "'rb'"],
-        "C", "IO"
-    ))
-    B.append(q(
-        "What does this print?\n\nfrom pathlib import Path\np = Path('a') / 'b'\nprint(str(p).endswith('a' + str(Path.sep) + 'b'))",
-        ["True", "False", "Depends on OS", "Raises AttributeError"],
-        "C", "IO",
-        "Path separator is OS-dependent; you shouldn't rely on string concatenation like that."
-    ))
-    B.append(q(
-        "Which are TRUE about pathlib.Path? (Select ALL that apply)",
-        ["Object-oriented path API", "Replaces os.path in many cases", "Can open via Path.open()", "Only represents absolute paths"],
-        "A,B,C", "IO"
+    # 10
+    B.append(Question(
+        prompt="What is printed?\n\nx = (1,)\nprint(type(x))",
+        options=["<class 'tuple'>", "<class 'int'>", "<class 'list'>", "<class 'float'>"],
+        correct={0},
+        topic="Sequences",
+        explanations={
+            0: "Correct. The trailing comma makes it a tuple.",
+            1: "Wrong. (1,) is not an int.",
+            2: "Wrong. Not a list.",
+            3: "Wrong. Not a float."
+        }
     ))
 
-    # ---------------- Stdlib ----------------
-    B.append(q(
-        "Which module is commonly used to serialize data to JSON?",
-        ["pickle", "json", "marshal", "csv"],
-        "B", "Stdlib"
-    ))
-    B.append(q(
-        "What is the output?\n\nprint(sum([1,2,3], 10))",
-        ["6", "16", "TypeError", "13"],
-        "B", "Stdlib",
-        "sum(iterable, start) starts from 10."
-    ))
-    B.append(q(
-        "Which tool is best for counting hashable items in an iterable?",
-        ["collections.Counter", "itertools.count", "functools.reduce", "statistics.mean"],
-        "A", "Stdlib"
-    ))
-    B.append(q(
-        "Which function turns an iterable of pairs into a dict?",
-        ["map", "dict", "tuple", "set"],
-        "B", "Stdlib"
-    ))
-    B.append(q(
-        "What does enumerate(iterable) yield?",
-        ["Only indexes", "Only items", "Pairs of (index, item)", "Triples (index, item, length)"],
-        "C", "Stdlib"
+    # 11
+    B.append(Question(
+        prompt="Which create a generator? (Select ALL that apply)",
+        options=["(x for x in range(3))", "[x for x in range(3)]", "def f():\n    yield 1", "{x for x in range(3)}"],
+        correct={0, 2},
+        topic="Generators",
+        explanations={
+            0: "Correct. Generator expression.",
+            1: "Wrong. List comprehension creates a list.",
+            2: "Correct. 'yield' makes a generator function.",
+            3: "Wrong. Set comprehension creates a set."
+        }
     ))
 
-    # ---------------- OOP ----------------
-    B.append(q(
-        "What does @staticmethod do?",
-        ["Passes instance as first arg", "Passes class as first arg", "No implicit first argument", "Makes method private"],
-        "C", "OOP"
-    ))
-    B.append(q(
-        "What does @classmethod receive as its first argument?",
-        ["self", "cls", "Both self and cls", "Nothing"],
-        "B", "OOP"
-    ))
-    B.append(q(
-        "What prints?\n\nclass A:\n    def f(self):\n        return 'A'\n\nclass B(A):\n    def f(self):\n        return super().f() + 'B'\n\nprint(B().f())",
-        ["A", "B", "AB", "BA"],
-        "C", "OOP"
-    ))
-    B.append(q(
-        "If a class defines __len__ returning 0, what is bool(obj)?",
-        ["True", "False", "TypeError", "Depends on __bool__ only"],
-        "B", "OOP",
-        "If __bool__ not defined, Python uses __len__ for truthiness."
-    ))
-    B.append(q(
-        "Which special method is used for 'obj[index]'?",
-        ["__getitem__", "__getattr__", "__index__", "__slice__"],
-        "A", "OOP"
+    # 12
+    B.append(Question(
+        prompt="What happens when a generator is exhausted?",
+        options=["Returns None", "Restarts automatically", "Raises StopIteration", "Loops forever"],
+        correct={2},
+        topic="Generators",
+        explanations={
+            0: "Wrong. It doesn’t return None to signal end.",
+            1: "Wrong. Generators do not restart on their own.",
+            2: "Correct. Iteration ends via StopIteration.",
+            3: "Wrong. It terminates."
+        }
     ))
 
-    # ---------------- Concurrency (basics) ----------------
-    B.append(q(
-        "In CPython, the GIL primarily means:",
-        ["I/O-bound threads can't overlap", "CPU-bound Python bytecode in threads doesn't run in true parallel", "multiprocessing can't use multiple cores", "asyncio is blocked by the GIL"],
-        "B", "Concurrency"
-    ))
-    B.append(q(
-        "Which is typically best for many concurrent network requests in Python?",
-        ["threading for CPU math", "asyncio for lots of I/O tasks", "multiprocessing for single-core", "recursion for I/O"],
-        "B", "Concurrency"
-    ))
-    B.append(q(
-        "What does 'await' require on its right-hand side?",
-        ["A normal function", "An awaitable (e.g., coroutine/future/task)", "A generator only", "A thread"],
-        "B", "Concurrency"
+    # 13
+    B.append(Question(
+        prompt="What is the result of: len({1,2,2,3})",
+        options=["4", "3", "2", "TypeError"],
+        correct={1},
+        topic="Sets",
+        explanations={
+            0: "Wrong. Duplicates are removed.",
+            1: "Correct. The set is {1,2,3}.",
+            2: "Wrong. There are three unique elements.",
+            3: "Wrong. This is valid."
+        }
     ))
 
-    # ---------------- Typing / Dataclasses ----------------
-    B.append(q(
-        "typing.Optional[int] means:",
-        ["int only", "int or None", "Any type", "Required int"],
-        "B", "Typing"
-    ))
-    B.append(q(
-        "What does a dataclass primarily generate?",
-        ["Only __init__", "Only __repr__", "Boilerplate methods like __init__/__repr__/__eq__", "A metaclass"],
-        "C", "Typing"
-    ))
-
-    # ---------------- Pitfalls / Semantics ----------------
-    B.append(q(
-        "What does this print?\n\nprint([[]] * 3)",
-        ["[[], [], []] three independent lists", "[[]] repeated references to the same inner list", "TypeError", "[]"],
-        "B", "Pitfalls",
-        "List multiplication repeats references to the same inner object."
-    ))
-    B.append(q(
-        "Given:\n\nx = [[]] * 2\nx[0].append(1)\nprint(x)\n\nWhat prints?",
-        ["[[1], []]", "[[1], [1]]", "[[], []]", "TypeError"],
-        "B", "Pitfalls"
-    ))
-    B.append(q(
-        "What is the output?\n\nprint({}.fromkeys([1,2,3], 0))",
-        ["{1:0,2:0,3:0}", "{0:1,0:2,0:3}", "TypeError", "Random order values"],
-        "A", "Pitfalls"
-    ))
-    B.append(q(
-        "Which statement about Python evaluation order is TRUE?",
-        ["Function arguments are evaluated left-to-right", "Right-to-left", "Random", "Depends on interpreter flags"],
-        "A", "Semantics"
-    ))
-    B.append(q(
-        "What does this print?\n\nprint('x' in {'x': 1})",
-        ["True", "False", "TypeError", "Depends on hash seed"],
-        "A", "Data Structures",
-        "'in' checks keys for dict membership."
+    # 14
+    B.append(Question(
+        prompt="What does this print?\n\nprint([[]] * 2)",
+        options=["[[], []] independent lists", "[[]] twice", "Two references to the same inner list", "TypeError"],
+        correct={2},
+        topic="Pitfalls",
+        explanations={
+            0: "Wrong. The inner list is shared (same object repeated).",
+            1: "Wrong. It becomes a list of length 2, not a nested repetition conceptually.",
+            2: "Correct. List multiplication repeats references to the same object.",
+            3: "Wrong. No error."
+        }
     ))
 
-    # ---------------- Complexity ----------------
-    B.append(q(
-        "Average-case time complexity of dict lookup by key?",
-        ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
-        "A", "Complexity"
-    ))
-    B.append(q(
-        "Average-case time complexity of checking membership in a set?",
-        ["O(1)", "O(log n)", "O(n)", "O(n^2)"],
-        "A", "Complexity"
-    ))
-
-    # ---------------- More varied “code reading” questions ----------------
-    B.append(q(
-        "What is printed?\n\ndef f(n):\n    return , funcs, funcs)",
-        ["10 11 12", "12 12 12", "13 13 13", "11 12 13"],
-        "B", "Closures",
-        "Late binding: i is looked up when lambda runs; final i=2 for all."
-    ))
-    B.append(q(
-        "How do you fix the late-binding issue in the previous pattern?",
-        ["Use global i", "Use default arg like lambda x, i=i: x+i", "Use eval()", "Use list.sort()"],
-        "B", "Closures"
-    ))
-    B.append(q(
-        "What does this print?\n\nx = {'a': 1}\nprint(list(x))",
-        ["['a']", "['a', 1]", "[('a',1)]", "TypeError"],
-        "A", "Data Structures",
-        "Iterating a dict yields keys."
-    ))
-    B.append(q(
-        "What is printed?\n\nprint(list(zip([1,2,3], ['a','b'])))",
-        ["[(1,'a'), (2,'b')]", "[(1,'a'), (2,'b'), (3,None)]", "TypeError", "[(1,'a'), (2,'b'), (3,'c')]"],
-        "A", "Stdlib",
-        "zip stops at the shortest input."
-    ))
-    B.append(q(
-        "What is printed?\n\nprint(list(map(lambda x: x*x, [1,2,3])))",
-        ["[1,4,9]", "[1,2,3]", "<map object ...>", "TypeError"],
-        "A", "Stdlib"
-    ))
-    B.append(q(
-        "What happens?\n\ns = 'abc'\ns[0] = 'z'",
-        ["Works, s becomes 'zbc'", "TypeError", "ValueError", "IndexError"],
-        "B", "Strings",
-        "Strings are immutable."
-    ))
-    B.append(q(
-        "What prints?\n\ndef f(a, b, /, c):\n    return a, b, c\n\nprint(f(1, 2, c=3))",
-        ["(1,2,3)", "TypeError", "(1,2,'c')", "SyntaxError"],
-        "A", "Functions",
-        "'/' makes a,b positional-only; c can be keyword."
-    ))
-    B.append(q(
-        "What does this print?\n\nprint(isinstance(True, int))",
-        ["True", "False", "TypeError", "Depends on version"],
-        "A", "Basics",
-        "bool is a subclass of int in Python."
-    ))
-    B.append(q(
-        "What is printed?\n\nprint({i for i in [1,2,2,3] if i % 2})",
-        ["{1, 3}", "{1,2,3}", "{2}", "[]"],
-        "A", "Comprehensions"
-    ))
-    B.append(q(
-        "What does this print?\n\nd = {'a': 1, 'b': 2}\nprint(list(d.items()))",
-        ["['a','b']", "[('a',1), ('b',2)]", "[1,2]", "TypeError"],
-        "B", "Data Structures"
-    ))
-    B.append(q(
-        "What does this print?\n\nprint('a' < 'B')",
-        ["True", "False", "TypeError", "Depends on locale"],
-        "B", "Strings",
-        "Comparison is by Unicode code point; uppercase letters come before lowercase."
-    ))
-    B.append(q(
-        "Which are TRUE about list slicing? (Select ALL that apply)",
-        ["Slicing returns a new list", "Slicing can be used to replace part of a list", "Slicing always deep-copies nested objects", "Slicing supports step"],
-        "A,B,D", "Sequences"
-    ))
-    B.append(q(
-        "What is printed?\n\nx = [1,2,3]\nx[1:2] = [9,9]\nprint(x)",
-        ["[1,9,9,3]", "[1,9,3]", "[9,9]", "TypeError"],
-        "A", "Sequences"
-    ))
-    B.append(q(
-        "What is printed?\n\nx = [1,2,3]\nx[1:1] = [9]\nprint(x)",
-        ["[1,9,2,3]", "[1,2,3,9]", "[1,2,9,3]", "TypeError"],
-        "A", "Sequences",
-        "Slice assignment at empty slice inserts."
-    ))
-    B.append(q(
-        "What does this print?\n\nprint(any([0, '', None, 5]))",
-        ["True", "False", "TypeError", "None"],
-        "A", "Stdlib"
-    ))
-    B.append(q(
-        "What does this print?\n\nprint(all([1, 'x', [], 3]))",
-        ["True", "False", "TypeError", "Depends on order"],
-        "B", "Stdlib",
-        "[] is falsy so all(...) is False."
-    ))
-    B.append(q(
-        "What does this print?\n\ndef f():\n    for i in range(3):\n        yield i\n\ng = f()\nprint(next(g), next(g))",
-        ["0 1", "1 2", "0 2", "StopIteration"],
-        "A", "Iterators/Generators"
-    ))
-    B.append(q(
-        "What is printed?\n\nprint(list(reversed([1,2,3])))",
-        ["[3,2,1]", "[1,2,3]", "<reversed object ...>", "TypeError"],
-        "A", "Stdlib"
-    ))
-    B.append(q(
-        "Which is TRUE about 'is' with small integers?",
-        ["It always returns True for equal ints", "It may return True due to interning/caching but should not be relied on for value equality", "It is guaranteed False", "It raises TypeError"],
-        "B", "Pitfalls"
-    ))
-    B.append(q(
-        "What does this print?\n\nprint({} == dict())",
-        ["True", "False", "TypeError", "Depends on CPython"],
-        "A", "Basics"
-    ))
-    B.append(q(
-        "Which are TRUE about Python's 'finally'? (Select ALL that apply)",
-        ["It runs if no exception occurs", "It runs if an exception occurs", "It always runs even if process is killed by OS", "It can override a pending exception if it raises another exception"],
-        "A,B,D", "Exceptions",
-        "Finally usually runs, but not in all abrupt termination scenarios."
+    # 15
+    B.append(Question(
+        prompt="Which statement about default arguments is TRUE?",
+        options=["Evaluated at call time", "Evaluated once at function definition", "Reset every call", "Must be immutable"],
+        correct={1},
+        topic="Functions",
+        explanations={
+            0: "Wrong. Defaults are evaluated when the def runs (definition time).",
+            1: "Correct. This is why mutable defaults can be dangerous.",
+            2: "Wrong. They persist across calls.",
+            3: "Wrong. They can be mutable; it’s just often a pitfall."
+        }
     ))
 
-    # Bank is intentionally > 110 by duplicating NOTHING; add more unique items:
-    B.extend([
-        q("What prints?\n\nprint(' '.join(['hi', 'there']))",
-          ["hi there", "hithere", "['hi','there']", "TypeError"], "A", "Strings"),
-        q("What prints?\n\nprint('hi\\nthere'.splitlines())",
-          ["['hi there']", "['hi', 'there']", "['hi\\nthere']", "TypeError"], "B", "Strings"),
-        q("What prints?\n\nprint(list(filter(None, [0, 1, '', 'a'])))",
-          ["[0, 1, '', 'a']", "[1, 'a']", "['a']", "TypeError"], "B", "Stdlib"),
-        q("What is printed?\n\nx = [1,2,3]\nprint(x[-1])",
-          ["1", "2", "3", "IndexError"], "C", "Sequences"),
-        q("Which is TRUE about list.append vs list.extend?",
-          ["append adds items individually; extend adds as one element",
-           "append adds one element; extend iterates and adds elements",
-           "Both are identical", "extend only works for sets"], "B", "Data Structures"),
-        q("What does this print?\n\nprint({1,2} | {2,3})",
-          ["{1,2,3}", "{2}", "{1,2} and {2,3}", "TypeError"], "A", "Data Structures"),
-        q("What does this print?\n\nprint({1,2,3} & {2,4})",
-          ["{1,2,3,4}", "{2}", "{1,4}", "TypeError"], "B", "Data Structures"),
-        q("What is printed?\n\nprint([i*i for i in range(4) if i%2==0])",
-          ["[0, 4]", "[1, 9]", "[0, 1, 4, 9]", "[2]"], "A", "Comprehensions"),
-        q("Which statement about recursion in Python is TRUE?",
-          ["Tail-call optimization prevents stack growth", "Python limits recursion depth by default", "Recursion is always faster than loops", "Recursion cannot return values"], "B", "Basics"),
-        q("What is printed?\n\nprint(type(lambda x: x))",
-          ["function", "<class 'function'>", "<lambda>", "callable"], "B", "Functions"),
-        q("What does this print?\n\nprint((lambda x: x+1)(5))",
-          ["5", "6", "Error", "None"], "B", "Functions"),
-        q("What does this print?\n\nx = {'a': 1}\nprint(x.pop('a'), x)",
-          ["1 {}", "{} 1", "KeyError", "None {}"], "A", "Data Structures"),
-        q("What prints?\n\nimport math\nprint(math.isclose(0.1+0.2, 0.3))",
-          ["True", "False", "TypeError", "Depends on locale"], "A", "Numerics"),
-        q("What is printed?\n\nprint(list(range(10))[1:8:3])",
-          ["[1,4,7]", "[1,3,5,7]", "[2,5,8]", "[1,8]"], "A", "Sequences"),
-        q("Which are TRUE about 'set' iteration order?",
-          ["Always sorted", "Deterministic across runs", "Not guaranteed sorted; depends on hashing", "Guaranteed insertion order"], "C", "Data Structures"),
-        q("In Python 3.7+, dict preserves:",
-          ["Sorted order", "Insertion order (as a language guarantee)", "Random order", "Reverse insertion order"], "B", "Data Structures"),
-        q("What happens?\n\ntry:\n    raise ValueError('x')\nexcept Exception as e:\n    print(type(e).__name__)",
-          ["ValueError", "Exception", "Error", "TypeError"], "A", "Exceptions"),
-        q("What is printed?\n\nprint('%.2f' % 1.239)",
-          ["1.23", "1.24", "1.239", "TypeError"], "B", "Strings"),
-        q("What does this print?\n\nprint(f\"{2+3} \")",
-          ["5", "2+3", "Error", "5 "], "D", "Strings"),
-        q("Which are TRUE about '==' for lists? (Select ALL that apply)",
-          ["Compares by identity", "Compares element values in order", "Lists of different lengths can be equal", "Nested lists are compared recursively by value"], "B,D", "Data Structures"),
-        q("What is printed?\n\nprint([1,2] == [1,2], [1,2] is [1,2])",
-          ["True True", "True False", "False True", "False False"], "B", "References"),
-        q("What is printed?\n\nx = None\nprint(x is None)",
-          ["True", "False", "TypeError", "Depends"], "A", "Basics"),
-        q("Which is a correct way to handle a possibly-missing dict key 'k'?",
-          ["d.k", "d['k'] without try", "d.get('k')", "d.k()"], "C", "Data Structures"),
-        q("What is printed?\n\nprint(min(['aa','b','ccc'], key=len))",
-          ["aa", "b", "ccc", "TypeError"], "B", "Stdlib"),
-        q("What does this print?\n\nprint(list({1: 'a', 2: 'b'}.values()))",
-          ["[1,2]", "['a','b']", "[(1,'a'), (2,'b')]", "TypeError"], "B", "Data Structures"),
-        q("What does this print?\n\nprint({k:v for k,v in [('a',1), ('b',2)]})",
-          ["{'a':1,'b':2}", "[('a',1), ('b',2)]", "{('a',1), ('b',2)}", "TypeError"], "A", "Comprehensions"),
-        q("Which tool is used to create an immutable set?",
-          ["set()", "frozenset()", "tuple()", "immutableset()"], "B", "Data Structures"),
-        q("What is printed?\n\nprint(type(frozenset([1,2])))",
-          ["set", "frozenset", "<class 'frozenset'>", "TypeError"], "C", "Data Structures"),
-    ])
+    # 16
+    B.append(Question(
+        prompt="What does this print?\n\ndef f(x, acc=[]):\n    acc.append(x)\n    return acc\n\nprint(f(1))\nprint(f(2))",
+        options=["[1] then [2]", "[1] then [1, 2]", "[1] then [1]", "TypeError"],
+        correct={1},
+        topic="Functions",
+        explanations={
+            0: "Wrong. acc is the same list each call.",
+            1: "Correct. The default list is reused and grows.",
+            2: "Wrong. It doesn’t reset automatically.",
+            3: "Wrong. Valid code."
+        }
+    ))
 
-    # Sanity: require 80+ unique questions
-    assert len(B) >= 110, f"Bank too small: {len(B)}"
+    # 17
+    B.append(Question(
+        prompt="What does this print?\n\nx = 10\n\ndef g():\n    x = 5\n\ng()\nprint(x)",
+        options=["5", "10", "UnboundLocalError", "NameError"],
+        correct={1},
+        topic="Scope",
+        explanations={
+            0: "Wrong. Local assignment does not affect global x.",
+            1: "Correct. The global x stays 10.",
+            2: "Wrong. No read-before-assign occurs here.",
+            3: "Wrong. x exists globally."
+        }
+    ))
+
+    # 18
+    B.append(Question(
+        prompt="What happens?\n\nx = 1\n\ndef h():\n    print(x)\n    x = 2\n\nh()",
+        options=["Prints 1", "Prints 2", "UnboundLocalError", "NameError"],
+        correct={2},
+        topic="Scope",
+        explanations={
+            0: "Wrong. Python treats x as local due to assignment in the function.",
+            1: "Wrong. It fails before printing.",
+            2: "Correct. Local variable referenced before assignment.",
+            3: "Wrong. Name exists, but scope rules make it local."
+        }
+    ))
+
+    # 19
+    B.append(Question(
+        prompt="Which keyword allows assigning to a variable in an enclosing (non-global) scope?",
+        options=["global", "nonlocal", "outer", "static"],
+        correct={1},
+        topic="Scope",
+        explanations={
+            0: "Wrong. global targets module scope, not enclosing function scope.",
+            1: "Correct. nonlocal targets nearest enclosing function scope.",
+            2: "Wrong. Not a Python keyword.",
+            3: "Wrong. Not a Python keyword."
+        }
+    ))
+
+    # 20
+    B.append(Question(
+        prompt="What does this print?\n\nprint('a' < 'B')",
+        options=["True", "False", "TypeError", "Depends on locale"],
+        correct={1},
+        topic="Strings",
+        explanations={
+            0: "Wrong. Unicode code points put 'B' before 'a'.",
+            1: "Correct. 'B' has a smaller code point than 'a'.",
+            2: "Wrong. String comparisons are valid.",
+            3: "Wrong. Python uses Unicode code points, not locale."
+        }
+    ))
+
+    # 21
+    B.append(Question(
+        prompt="What is the output?\n\nprint(','.join(['a', 'b', 'c']))",
+        options=["a b c", "a,b,c", "['a','b','c']", "TypeError"],
+        correct={1},
+        topic="Strings",
+        explanations={
+            0: "Wrong. join uses the separator exactly (comma here).",
+            1: "Correct. Comma-separated string.",
+            2: "Wrong. That would be repr of a list, not join output.",
+            3: "Wrong. join works with strings."
+        }
+    ))
+
+    # 22
+    B.append(Question(
+        prompt="Which converts bytes to str using UTF-8?",
+        options=["b.encode('utf-8')", "b.decode('utf-8')", "str(b)", "bytes(b)"],
+        correct={1},
+        topic="Strings/Bytes",
+        explanations={
+            0: "Wrong. encode converts str -> bytes.",
+            1: "Correct. decode converts bytes -> str.",
+            2: "Wrong. str(b) produces a representation like \"b'...'\".",
+            3: "Wrong. bytes(b) expects an int iterable or buffer; not decoding."
+        }
+    ))
+
+    # 23
+    B.append(Question(
+        prompt="What does this print?\n\nprint('hello'[:3])",
+        options=["hel", "ell", "llo", "IndexError"],
+        correct={0},
+        topic="Strings",
+        explanations={
+            0: "Correct. Slice from start up to index 3 (exclusive).",
+            1: "Wrong. That would be 'hello'[1:4].",
+            2: "Wrong. That would be 'hello'[2:5].",
+            3: "Wrong. Slicing is safe; no IndexError."
+        }
+    ))
+
+    # 24
+    B.append(Question(
+        prompt="Which statement about slicing is TRUE? (Select ALL that apply)",
+        options=["Slicing a list returns a new list", "Slicing deep-copies nested objects", "Slicing supports a step value", "Slicing always returns a view"],
+        correct={0, 2},
+        topic="Sequences",
+        explanations={
+            0: "Correct. It creates a new list object (shallow copy).",
+            1: "Wrong. It’s a shallow copy; nested objects are shared.",
+            2: "Correct. list[start:stop:step] supports step.",
+            3: "Wrong. Python list slicing is not a view (unlike some libraries)."
+        }
+    ))
+
+    # 25
+    B.append(Question(
+        prompt="What is printed?\n\nx = [1,2,3]\nx[1:2] = [9,9]\nprint(x)",
+        options=["[1, 9, 3]", "[1, 9, 9, 3]", "[9, 9]", "TypeError"],
+        correct={1},
+        topic="Sequences",
+        explanations={
+            0: "Wrong. Replacing a slice can change length; here it inserts two items.",
+            1: "Correct. The slice [2] is replaced by [9,9].",
+            2: "Wrong. That would replace the whole list.",
+            3: "Wrong. Slice assignment is valid."
+        }
+    ))
+
+    # 26
+    B.append(Question(
+        prompt="What does this print?\n\nprint(sorted(['10','2','1']))",
+        options=["['1','2','10']", "['10','1','2']", "['10','2','1']", "TypeError"],
+        correct={1},
+        topic="Sorting",
+        explanations={
+            0: "Wrong. That would be numeric sort, but these are strings.",
+            1: "Correct. Lexicographic string order: '10' < '1' < '2' is false; actual is '10','1','2'.",
+            2: "Wrong. That’s the original order, not sorted.",
+            3: "Wrong. Sorting strings is valid."
+        }
+    ))
+
+    # 27
+    B.append(Question(
+        prompt="How do you sort numbers by absolute value?",
+        options=["sorted(nums, key=abs)", "sorted(abs(nums))", "nums.sort(abs)", "sort(nums, abs)"],
+        correct={0},
+        topic="Sorting",
+        explanations={
+            0: "Correct. key=abs sorts by absolute value.",
+            1: "Wrong. abs(nums) is invalid for a list.",
+            2: "Wrong. list.sort takes keyword key=..., not a positional function like that.",
+            3: "Wrong. sort(...) is not a built-in function in that form."
+        }
+    ))
+
+    # 28
+    B.append(Question(
+        prompt="What does enumerate(iterable) produce?",
+        options=["Only items", "Only indexes", "Pairs of (index, item)", "Triples of (index, item, length)"],
+        correct={2},
+        topic="Stdlib",
+        explanations={
+            0: "Wrong. It includes indexes too.",
+            1: "Wrong. It includes items too.",
+            2: "Correct. enumerate yields (index, value) pairs.",
+            3: "Wrong. No length is included."
+        }
+    ))
+
+    # 29
+    B.append(Question(
+        prompt="What is printed?\n\nprint(list(zip([1,2,3], ['a','b'])))",
+        options=["[(1,'a'), (2,'b')]", "[(1,'a'), (2,'b'), (3,None)]", "TypeError", "[(1,'a'), (2,'b'), (3,'c')]"],
+        correct={0},
+        topic="Stdlib",
+        explanations={
+            0: "Correct. zip stops at the shortest iterable.",
+            1: "Wrong. zip does not pad with None by default.",
+            2: "Wrong. This is valid.",
+            3: "Wrong. 'c' is not present."
+        }
+    ))
+
+    # 30
+    B.append(Question(
+        prompt="What does dict.get('k', 99) return if 'k' is missing?",
+        options=["Raises KeyError", "Returns None always", "Returns 99", "Adds 'k' with 99"],
+        correct={2},
+        topic="Dicts",
+        explanations={
+            0: "Wrong. get does not raise KeyError.",
+            1: "Wrong. It returns default if provided.",
+            2: "Correct. Default is returned when key is missing.",
+            3: "Wrong. get does not mutate the dict."
+        }
+    ))
+
+    # 31
+    B.append(Question(
+        prompt="What does this print?\n\nd = {'a': 1}\nprint(d.setdefault('b', 2), d)",
+        options=["2 {'a': 1, 'b': 2}", "None {'a': 1}", "KeyError", "2 {'a': 1}"],
+        correct={0},
+        topic="Dicts",
+        explanations={
+            0: "Correct. setdefault inserts missing key and returns the value.",
+            1: "Wrong. It will insert 'b' and return 2.",
+            2: "Wrong. It does not raise KeyError.",
+            3: "Wrong. It mutates the dict by adding 'b'."
+        }
+    ))
+
+    # 32
+    B.append(Question(
+        prompt="Which module is typically used to encode/decode JSON?",
+        options=["pickle", "json", "marshal", "csv"],
+        correct={1},
+        topic="Stdlib",
+        explanations={
+            0: "Wrong. pickle is Python-specific serialization, not JSON.",
+            1: "Correct. The json module handles JSON encoding/decoding.",
+            2: "Wrong. marshal is low-level and not for JSON interchange.",
+            3: "Wrong. csv is for delimited text tables."
+        }
+    ))
+
+    # 33
+    B.append(Question(
+        prompt="What is printed?\n\nprint(sum([1,2,3], 10))",
+        options=["6", "13", "16", "TypeError"],
+        correct={2},
+        topic="Stdlib",
+        explanations={
+            0: "Wrong. That would be sum without a start value.",
+            1: "Wrong. 10+1+2+3 is not 13.",
+            2: "Correct. sum(iterable, start) starts from 10 → 16.",
+            3: "Wrong. This usage is valid."
+        }
+    ))
+
+    # 34
+    B.append(Question(
+        prompt="What does this print?\n\nprint(any([0, '', None, 5]))",
+        options=["True", "False", "TypeError", "None"],
+        correct={0},
+        topic="Stdlib",
+        explanations={
+            0: "Correct. any() returns True if any element is truthy (5 is truthy).",
+            1: "Wrong. There is a truthy element.",
+            2: "Wrong. This is valid input.",
+            3: "Wrong. any returns True/False."
+        }
+    ))
+
+    # 35
+    B.append(Question(
+        prompt="What does this print?\n\nprint(all([1, 'x', [], 3]))",
+        options=["True", "False", "TypeError", "Depends on order"],
+        correct={1},
+        topic="Stdlib",
+        explanations={
+            0: "Wrong. [] is falsy, making all() False.",
+            1: "Correct. all() requires all elements truthy; [] is falsy.",
+            2: "Wrong. This is valid.",
+            3: "Wrong. all evaluates deterministically."
+        }
+    ))
+
+    # 36
+    B.append(Question(
+        prompt="Which statement about try/else is TRUE?",
+        options=["else runs only if an exception happens", "else runs only if no exception happens", "else always runs", "else replaces finally"],
+        correct={1},
+        topic="Exceptions",
+        explanations={
+            0: "Wrong. That’s the except block’s job.",
+            1: "Correct. try/else executes else when no exception occurs.",
+            2: "Wrong. else is conditional on no exception.",
+            3: "Wrong. finally has a different role."
+        }
+    ))
+
+    # 37
+    B.append(Question(
+        prompt="What happens?\n\ntry:\n    1/0\nfinally:\n    print('done')",
+        options=["Prints done and continues normally", "Prints done then raises ZeroDivisionError", "Raises before printing", "SyntaxError"],
+        correct={1},
+        topic="Exceptions",
+        explanations={
+            0: "Wrong. The exception still occurs.",
+            1: "Correct. finally runs, then the exception propagates.",
+            2: "Wrong. finally prints before propagation.",
+            3: "Wrong. Syntax is valid."
+        }
+    ))
+
+    # 38
+    B.append(Question(
+        prompt="Inside an except block, what does 'raise' with no arguments do?",
+        options=["Raises SyntaxError", "Re-raises the current exception", "Raises None", "Suppresses the exception"],
+        correct={1},
+        topic="Exceptions",
+        explanations={
+            0: "Wrong. It's legal syntax in an except block.",
+            1: "Correct. It re-raises the active exception.",
+            2: "Wrong. It doesn't raise None.",
+            3: "Wrong. It does the opposite of suppressing."
+        }
+    ))
+
+    # 39
+    B.append(Question(
+        prompt="Which is TRUE about 'with open(...) as f:'?",
+        options=["It disables buffering", "It always loads the file into memory", "It automatically closes even if errors happen", "It prevents exceptions"],
+        correct={2},
+        topic="IO",
+        explanations={
+            0: "Wrong. Buffering behavior depends on mode and params.",
+            1: "Wrong. You still read explicitly.",
+            2: "Correct. Context manager closes file on exit.",
+            3: "Wrong. Exceptions can still occur."
+        }
+    ))
+
+    # 40
+    B.append(Question(
+        prompt="Which mode opens a file for appending text?",
+        options=["'r'", "'w'", "'a'", "'rb'"],
+        correct={2},
+        topic="IO",
+        explanations={
+            0: "Wrong. 'r' is read mode.",
+            1: "Wrong. 'w' truncates and writes.",
+            2: "Correct. 'a' appends to the end.",
+            3: "Wrong. 'rb' is read-binary."
+        }
+    ))
+
+    # 41
+    B.append(Question(
+        prompt="What does @staticmethod do?",
+        options=["Passes instance as first arg", "Passes class as first arg", "No implicit first argument", "Makes method private"],
+        correct={2},
+        topic="OOP",
+        explanations={
+            0: "Wrong. That’s normal instance methods.",
+            1: "Wrong. That’s @classmethod.",
+            2: "Correct. staticmethod has no implicit self/cls.",
+            3: "Wrong. Python has no true private methods via decorator."
+        }
+    ))
+
+    # 42
+    B.append(Question(
+        prompt="What does @classmethod receive as its first argument?",
+        options=["self", "cls", "both self and cls", "nothing"],
+        correct={1},
+        topic="OOP",
+        explanations={
+            0: "Wrong. self is for instance methods.",
+            1: "Correct. cls is the class object.",
+            2: "Wrong. It receives only cls implicitly.",
+            3: "Wrong. It does receive cls."
+        }
+    ))
+
+    # 43
+    B.append(Question(
+        prompt="What is printed?\n\nclass A:\n    def f(self):\n        return 'A'\n\nclass B(A):\n    def f(self):\n        return super().f() + 'B'\n\nprint(B().f())",
+        options=["A", "B", "AB", "BA"],
+        correct={2},
+        topic="OOP",
+        explanations={
+            0: "Wrong. B overrides f and adds 'B'.",
+            1: "Wrong. It includes A's result too.",
+            2: "Correct. super().f() returns 'A', then + 'B' → 'AB'.",
+            3: "Wrong. Order is A then B."
+        }
+    ))
+
+    # 44
+    B.append(Question(
+        prompt="If a class defines __len__ returning 0 and no __bool__, what is bool(obj)?",
+        options=["True", "False", "TypeError", "Depends only on __bool__"],
+        correct={1},
+        topic="OOP",
+        explanations={
+            0: "Wrong. __len__ of 0 makes it falsy.",
+            1: "Correct. Python uses __len__ when __bool__ is absent.",
+            2: "Wrong. __len__ returning int is valid.",
+            3: "Wrong. __len__ also affects truthiness."
+        }
+    ))
+
+    # 45
+    B.append(Question(
+        prompt="Which special method enables obj[index]?",
+        options=["__getitem__", "__getattr__", "__index__", "__slice__"],
+        correct={0},
+        topic="OOP",
+        explanations={
+            0: "Correct. __getitem__ is used for indexing.",
+            1: "Wrong. __getattr__ handles missing attributes.",
+            2: "Wrong. __index__ is for converting an object to an integer index.",
+            3: "Wrong. __slice__ is not used like this in modern Python."
+        }
+    ))
+
+    # 46
+    B.append(Question(
+        prompt="What is the output?\n\nprint(list(map(lambda x: x*x, [1,2,3])))",
+        options=["[1, 4, 9]", "[1, 2, 3]", "<map object ...>", "TypeError"],
+        correct={0},
+        topic="Functional",
+        explanations={
+            0: "Correct. map applies the function to each element.",
+            1: "Wrong. That would be identity function behavior.",
+            2: "Wrong. list(...) forces evaluation; without list it would show a map object.",
+            3: "Wrong. This is valid."
+        }
+    ))
+
+    # 47
+    B.append(Question(
+        prompt="What does this print?\n\nprint(list(filter(None, [0, 1, '', 'a'])))",
+        options=["[0, 1, '', 'a']", "[1, 'a']", "['a']", "TypeError"],
+        correct={1},
+        topic="Functional",
+        explanations={
+            0: "Wrong. filter(None, ...) removes falsy values.",
+            1: "Correct. 0 and '' are falsy; 1 and 'a' remain.",
+            2: "Wrong. 1 is also truthy so it remains too.",
+            3: "Wrong. This is valid usage."
+        }
+    ))
+
+    # 48
+    B.append(Question(
+        prompt="What is the output?\n\nx = {'a': 1, 'b': 2}\nprint(list(x))",
+        options=["['a', 'b'] (in insertion order)", "['a', 1, 'b', 2]", "[('a',1), ('b',2)]", "TypeError"],
+        correct={0},
+        topic="Dicts",
+        explanations={
+            0: "Correct. Iterating a dict yields its keys (in insertion order in modern Python).",
+            1: "Wrong. Iteration does not yield values inline.",
+            2: "Wrong. That would be list(x.items()).",
+            3: "Wrong. list(dict) is valid."
+        }
+    ))
+
+    # 49
+    B.append(Question(
+        prompt="Which is TRUE about the GIL in CPython?",
+        options=[
+            "It prevents I/O concurrency entirely",
+            "It prevents true parallel execution of CPU-bound Python bytecode in threads",
+            "It prevents multiprocessing from using multiple cores",
+            "It makes asyncio impossible"
+        ],
+        correct={1},
+        topic="Concurrency",
+        explanations={
+            0: "Wrong. I/O-bound threads can still overlap while waiting on I/O.",
+            1: "Correct. CPU-bound threads won’t run Python bytecode in true parallel.",
+            2: "Wrong. multiprocessing uses separate processes and can use multiple cores.",
+            3: "Wrong. asyncio is cooperative and works fine."
+        }
+    ))
+
+    # 50
+    B.append(Question(
+        prompt="What does 'await' require on the right-hand side?",
+        options=["A normal function", "An awaitable (coroutine/future/task)", "Only a generator", "A thread object"],
+        correct={1},
+        topic="Concurrency",
+        explanations={
+            0: "Wrong. Normal functions return values immediately; not awaitable.",
+            1: "Correct. await works with awaitables.",
+            2: "Wrong. Generators are not awaitables unless wrapped/converted.",
+            3: "Wrong. Threads are not awaitables by default."
+        }
+    ))
+
+    # 51
+    B.append(Question(
+        prompt="typing.Optional[int] means:",
+        options=["int only", "int or None", "any type", "a required int"],
+        correct={1},
+        topic="Typing",
+        explanations={
+            0: "Wrong. Optional allows None.",
+            1: "Correct. Optional[int] == Union[int, None].",
+            2: "Wrong. That would be Any.",
+            3: "Wrong. Optional is the opposite of required-only."
+        }
+    ))
+
+    # 52
+    B.append(Question(
+        prompt="What does this print?\n\ns = 'abc'\ntry:\n    s[0] = 'z'\nexcept Exception as e:\n    print(type(e).__name__)",
+        options=["ValueError", "TypeError", "IndexError", "No output"],
+        correct={1},
+        topic="Strings",
+        explanations={
+            0: "Wrong. Not a ValueError.",
+            1: "Correct. Strings are immutable; item assignment raises TypeError.",
+            2: "Wrong. Index 0 is valid; immutability is the issue.",
+            3: "Wrong. The exception is caught and printed."
+        }
+    ))
+
+    # 53
+    B.append(Question(
+        prompt="What does this print?\n\nprint([1,2] == [1,2], [1,2] is [1,2])",
+        options=["True True", "True False", "False True", "False False"],
+        correct={1},
+        topic="References",
+        explanations={
+            0: "Wrong. Separate list literals are different objects → 'is' is False.",
+            1: "Correct. Values equal, identities differ.",
+            2: "Wrong. Equality is True here.",
+            3: "Wrong. Equality is True."
+        }
+    ))
+
+    # 54
+    B.append(Question(
+        prompt="Which statement about dict membership is TRUE?\n\n('x' in {'x': 1})",
+        options=["Checks values for membership", "Checks keys for membership", "Raises TypeError", "Depends on hash seed"],
+        correct={1},
+        topic="Dicts",
+        explanations={
+            0: "Wrong. 'in' on a dict checks keys, not values.",
+            1: "Correct. Dict membership tests keys.",
+            2: "Wrong. It's valid.",
+            3: "Wrong. Meaning is deterministic; hash seed doesn't change correctness."
+        }
+    ))
+
+    assert len(B) == 54, f"Expected 54 questions, got {len(B)}"
     return B
 
+# ---------------- Logging + Charting ----------------
 
-def pick_exam(bank: List[Question], n: int) -> List[Question]:
-    # Ensure topic variety: lightly balance by topic
-    by_topic: Dict[str, List[Question]] = {}
-    for qu in bank:
-        by_topic.setdefault(qu.topic, []).append(qu)
-
-    # Shuffle each topic bucket
-    for lst in by_topic.values():
-        random.shuffle(lst)
-
-    topics = list(by_topic.keys())
-    random.shuffle(topics)
-
-    exam: List[Question] = []
-    # Round-robin topics to improve diversity
-    while len(exam) < n:
-        made_progress = False
-        for t in topics:
-            if by_topic[t]:
-                exam.append(by_topic[t].pop())
-                made_progress = True
-                if len(exam) == n:
-                    break
-        if not made_progress:
-            break
-
-    # If still short (shouldn't happen), fill randomly
-    if len(exam) < n:
-        remaining = [x for xs in by_topic.values() for x in xs]
-        random.shuffle(remaining)
-        exam.extend(remaining[: (n - len(exam))])
-
-    return exam[:n]
+def append_result_csv(
+    timestamp_iso: str,
+    attempted: int,
+    correct: int,
+    score_pct: float,
+    duration_sec: int,
+    total_questions: int,
+) -> None:
+    file_exists = os.path.exists(RESULTS_CSV)
+    with open(RESULTS_CSV, "a", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        if not file_exists:
+            w.writerow(["timestamp", "attempted", "correct", "score_pct", "duration_sec", "total_questions"])
+        w.writerow([timestamp_iso, attempted, correct, f"{score_pct:.2f}", duration_sec, total_questions])
 
 
-def run_exam(bank: List[Question]) -> None:
-    exam = pick_exam(bank, TOTAL_QUESTIONS)
-    start = time.time()
-
-    correct = 0
-    per_topic: Dict[str, Tuple[int, int]] = {}  # topic -> (correct, total)
-    missed: List[Tuple[Question, Set[int]]] = []
-
-    print("\nPython 3 Practice Assessment (original questions)")
-    print(f"Questions: {TOTAL_QUESTIONS}")
-    print(f"Time limit: {TIME_LIMIT_SECONDS // 60} minutes")
-    print("Answer format: A (single) or A,C (multi-select). Type 'q' to quit.\n")
-
-    for i, qu in enumerate(exam, start=1):
-        remaining = time_left(start)
-        if remaining <= 0:
-            print("\nTime is up!")
-            break
-
-        print("=" * 78)
-        print(f"Q{i}/{TOTAL_QUESTIONS}  |  Topic: {qu.topic}  |  Time left: {fmt_mmss(remaining)}\n")
-        print(qu.prompt)
-        print()
-
-        for idx, opt in enumerate(qu.options):
-            print(f"  {LETTERS[idx]}. {opt}")
-
-        print("\n(Select ALL that apply)" if qu.multi_select else "\n(Select ONE answer)")
-
-        while True:
-            remaining = time_left(start)
-            if remaining <= 0:
-                print("\nTime is up!")
-                break
-
-            raw = input("Your answer: ")
-            chosen = parse_answer(raw, qu.multi_select, len(qu.options))
-            if chosen is None:
-                print("Invalid input. Example: A  or  A,C")
-                continue
-            if -1 in chosen:
-                print("\nExiting exam early.")
-                show_results(correct, per_topic, missed, attempted=i - 1)
-                return
-
-            is_correct = chosen == qu.correct
-
-            c, t = per_topic.get(qu.topic, (0, 0))
-            per_topic[qu.topic] = (c + (1 if is_correct else 0), t + 1)
-
-            if is_correct:
-                correct += 1
-                print("Correct!\n")
-            else:
-                missed.append((qu, chosen))
-                print(f"Incorrect. Correct: {idxs_to_letters(qu.correct)}\n")
-            break
-
-        if time_left(start) <= 0:
-            break
-
-    attempted = sum(t for _, t in per_topic.values())
-    show_results(correct, per_topic, missed, attempted=attempted)
-
-
-def show_results(correct: int, per_topic: Dict[str, Tuple[int, int]],
-                 missed: List[Tuple[Question, Set[int]]], attempted: int) -> None:
-    print("\n" + "=" * 78)
-    print("RESULTS")
-    print("=" * 78)
-    if attempted == 0:
-        print("No questions attempted.")
+def generate_progress_chart() -> None:
+    if plt is None:
+        print("\n[Chart] matplotlib not available. Install it with: pip install matplotlib")
+        return
+    if not os.path.exists(RESULTS_CSV):
+        print("\n[Chart] No CSV found yet.")
         return
 
-    pct = (correct / attempted) * 100.0
-    print(f"Attempted: {attempted}")
-    print(f"Correct:   {correct}")
-    print(f"Score:     {pct:.1f}%\n")
+    timestamps = []
+    scores = []
+    attempts = []
 
-    print("Topic breakdown:")
-    rows = []
-    for topic, (c, t) in per_topic.items():
-        rows.append((t, (c / t) * 100.0, topic, c))
-    rows.sort(key=lambda x: (-x[0], x[1]))
+    with open(RESULTS_CSV, "r", newline="", encoding="utf-8") as f:
+        r = csv.DictReader(f)
+        for row in r:
+            timestamps.append(row["timestamp"])
+            scores.append(float(row["score_pct"]))
+            attempts.append(int(row["attempted"]))
 
-    for t, tpct, topic, c in rows:
-        print(f"  {topic:20s}  {c:2d}/{t:2d}  ({tpct:5.1f}%)")
+    if not scores:
+        print("\n[Chart] CSV has no rows.")
+        return
 
-    if REVIEW_MISSED_AT_END and missed:
-        print("\n" + "-" * 78)
-        print("Review missed questions")
-        print("-" * 78)
-        for idx, (qu, chosen) in enumerate(missed, start=1):
-            print(f"\nMissed #{idx} | Topic: {qu.topic}")
-            print(qu.prompt)
-            for i, opt in enumerate(qu.options):
-                marker = ""
-                if i in qu.correct:
-                    marker += "  [CORRECT]"
-                print(f"  {LETTERS[i]}. {opt}{marker}")
-            print(f"Your answer: {idxs_to_letters(chosen)}")
-            if qu.explanation:
-                print(f"Why: {qu.explanation}")
+    x = list(range(1, len(scores) + 1))
 
-    print("\nTip: run again for a different balanced set of 54.\n")
+    plt.figure()
+    plt.plot(x, scores, marker="o")
+    plt.xlabel("Attempt #")
+    plt.ylabel("Score (%)")
+    plt.title("Python Practice Progress")
+    plt.ylim(0, 100)
+    plt.grid(True, linestyle="--", linewidth=0.5)
+    plt.tight_layout()
+    plt.savefig(PROGRESS_PNG, dpi=150)
+    print(f"\n[Chart] Wrote {PROGRESS_PNG} ({len(scores)} attempts).")
 
 
-def main() -> int:
-    random.seed()  # system time
-    bank = build_bank()
-    if len(bank) < TOTAL_QUESTIONS:
-        print("Question bank too small.")
-        return 1
-    run_exam(bank)
-    return 0
+# ---------------- Exam Engine ----------------
+
+def run_exam() -> None:
+    questions = bank()
+    random.shuffle(questions)
+    exam = questions[:TOTAL_QUESTIONS]
+
+    start = time.time()
+    correct = 0
+    attempted = 0  # ✅ FIX: track attempted properly
+
+    for i, q in enumerate(exam, 1):
+        if time_left(start) <= 0:
+            print("\nTime expired.")
+            break
+
+        print("=" * 80)
+        print(f"Q{i}/{TOTAL_QUESTIONS} | {q.topic} | Time left: {mmss(time_left(start))}\n")
+        print(q.prompt + "\n")
+
+        for idx, opt in enumerate(q.options):
+            print(f"  {LETTERS[idx]}. {opt}")
+
+        print("\nAnswer (A or A,C) or Q to quit")
+
+        while True:
+            ans = parse_answer(input("> "), len(q.options))
+            if ans is None:
+                print("Invalid input.")
+                continue
+            if -1 in ans:
+                # log + chart even if quit
+                duration_sec = int(time.time() - start)
+                score_pct = (correct / attempted) * 100.0 if attempted else 0.0
+                timestamp_iso = datetime.now().isoformat(timespec="seconds")
+                append_result_csv(timestamp_iso, attempted, correct, score_pct, duration_sec, TOTAL_QUESTIONS)
+                print("\nSaved result (quit early).")
+                print(f"{timestamp_iso} | Attempts: {attempted} | Score: {correct}/{attempted} ({score_pct:.1f}%)")
+                generate_progress_chart()
+                return
+            break
+
+        attempted += 1  # ✅ FIX: only increment once you actually answer a question
+
+        is_correct = ans == q.correct
+        print("\nCorrect!" if is_correct else "\nIncorrect.")
+
+        if is_correct:
+            correct += 1
+
+        print("\nExplanation:")
+        for idx, opt in enumerate(q.options):
+            status = "CORRECT" if idx in q.correct else "WRONG"
+            print(f"  {LETTERS[idx]}. {opt}")
+            print(f"     {status}: {q.explanations.get(idx, 'No explanation provided.')}")
+
+    # ----- end of run -----
+    duration_sec = int(time.time() - start)
+    score_pct = (correct / attempted) * 100.0 if attempted else 0.0
+    timestamp_iso = datetime.now().isoformat(timespec="seconds")
+
+    append_result_csv(timestamp_iso, attempted, correct, score_pct, duration_sec, TOTAL_QUESTIONS)
+    print("\nResult Log Entry:")
+    print(f"{timestamp_iso} | Attempts: {attempted} | Score: {correct}/{attempted} ({score_pct:.1f}%) | Duration: {duration_sec}s")
+    print("\nFinal Score:", correct, "/", attempted if attempted else 0)
+
+    generate_progress_chart()
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    run_exam()
