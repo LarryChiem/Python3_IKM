@@ -1,0 +1,1033 @@
+[
+  {
+    "topic": "Basics",
+    "prompt": "What is the output?\n\nprint(type(3/2))",
+    "options": [
+      "<class 'int'>",
+      "<class 'float'>",
+      "<class 'decimal.Decimal'>",
+      "TypeError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. / always returns a float in Python 3.",
+      "1": "Correct. 3/2 evaluates to 1.5 (float).",
+      "2": "Wrong. Decimal is only used if explicitly created.",
+      "3": "Wrong. No exception is raised."
+    }
+  },
+  {
+    "topic": "Basics",
+    "prompt": "Which statement about '==' and 'is' is TRUE?",
+    "options": [
+      "'is' compares values",
+      "'==' compares identity",
+      "'==' compares values; 'is' compares identity",
+      "They are interchangeable"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. 'is' checks identity (same object).",
+      "1": "Wrong. '==' checks value equality.",
+      "2": "Correct. Value vs identity is the key distinction.",
+      "3": "Wrong. They are not interchangeable."
+    }
+  },
+  {
+    "topic": "Numerics",
+    "prompt": "What does this print?\n\nprint(0.1 + 0.2 == 0.3)",
+    "options": [
+      "True",
+      "False",
+      "TypeError",
+      "Depends on OS"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Floating-point rounding prevents exact equality here.",
+      "1": "Correct. 0.1+0.2 is not exactly 0.3 in binary floating point.",
+      "2": "Wrong. No exception is raised.",
+      "3": "Wrong. This behavior is consistent across platforms."
+    }
+  },
+  {
+    "topic": "Truthiness",
+    "prompt": "Which values are falsy in Python? (Select ALL that apply)",
+    "options": [
+      "0",
+      "''",
+      "[]",
+      "'0'"
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanations": {
+      "0": "Correct. Numeric zero is falsy.",
+      "1": "Correct. Empty string is falsy.",
+      "2": "Correct. Empty list is falsy.",
+      "3": "Wrong. Non-empty strings are truthy even if they look like zero."
+    }
+  },
+  {
+    "topic": "Truthiness",
+    "prompt": "What does this print?\n\nprint(bool([0]))",
+    "options": [
+      "True",
+      "False",
+      "TypeError",
+      "None"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. Any non-empty list is truthy.",
+      "1": "Wrong. The list is not empty.",
+      "2": "Wrong. bool(list) is valid.",
+      "3": "Wrong. bool returns True/False."
+    }
+  },
+  {
+    "topic": "Data Structures",
+    "prompt": "Which are valid dictionary keys? (Select ALL that apply)",
+    "options": [
+      "('a', 1)",
+      "['a', 1]",
+      "{'a': 1}",
+      "42"
+    ],
+    "correct": [
+      0,
+      3
+    ],
+    "explanations": {
+      "0": "Correct. Tuples are hashable if elements are hashable.",
+      "1": "Wrong. Lists are mutable → unhashable.",
+      "2": "Wrong. Dicts are mutable → unhashable.",
+      "3": "Correct. Integers are hashable."
+    }
+  },
+  {
+    "topic": "References",
+    "prompt": "What does this print?\n\nx = [1,2,3]\ny = x\nx.append(4)\nprint(y)",
+    "options": [
+      "[1,2,3]",
+      "[1,2,3,4]",
+      "[4]",
+      "NameError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. y references the same list as x.",
+      "1": "Correct. Both variables point to the same list object.",
+      "2": "Wrong. append mutates the list; it doesn’t replace it with [4].",
+      "3": "Wrong. No variable is missing."
+    }
+  },
+  {
+    "topic": "References",
+    "prompt": "What does this print?\n\nx = [1,2,3]\ny = x[:]\nx.append(4)\nprint(y)",
+    "options": [
+      "[1,2,3,4]",
+      "[1,2,3]",
+      "[]",
+      "TypeError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. y is a copy; it doesn't see x's append.",
+      "1": "Correct. Slicing creates a shallow copy of the list.",
+      "2": "Wrong. The copy contains elements.",
+      "3": "Wrong. This is valid Python."
+    }
+  },
+  {
+    "topic": "Sequences",
+    "prompt": "What is printed?\n\nx = (1)\nprint(type(x))",
+    "options": [
+      "<class 'tuple'>",
+      "<class 'int'>",
+      "<class 'list'>",
+      "<class 'float'>"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Parentheses alone do not make a tuple.",
+      "1": "Correct. (1) is just the integer 1.",
+      "2": "Wrong. Lists use square brackets.",
+      "3": "Wrong. No float conversion occurs."
+    }
+  },
+  {
+    "topic": "Sequences",
+    "prompt": "What is printed?\n\nx = (1,)\nprint(type(x))",
+    "options": [
+      "<class 'tuple'>",
+      "<class 'int'>",
+      "<class 'list'>",
+      "<class 'float'>"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. The trailing comma makes it a tuple.",
+      "1": "Wrong. (1,) is not an int.",
+      "2": "Wrong. Not a list.",
+      "3": "Wrong. Not a float."
+    }
+  },
+  {
+    "topic": "Generators",
+    "prompt": "Which create a generator? (Select ALL that apply)",
+    "options": [
+      "(x for x in range(3))",
+      "[x for x in range(3)]",
+      "def f():\n    yield 1",
+      "{x for x in range(3)}"
+    ],
+    "correct": [
+      0,
+      2
+    ],
+    "explanations": {
+      "0": "Correct. Generator expression.",
+      "1": "Wrong. List comprehension creates a list.",
+      "2": "Correct. 'yield' makes a generator function.",
+      "3": "Wrong. Set comprehension creates a set."
+    }
+  },
+  {
+    "topic": "Generators",
+    "prompt": "What happens when a generator is exhausted?",
+    "options": [
+      "Returns None",
+      "Restarts automatically",
+      "Raises StopIteration",
+      "Loops forever"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. It doesn’t return None to signal end.",
+      "1": "Wrong. Generators do not restart on their own.",
+      "2": "Correct. Iteration ends via StopIteration.",
+      "3": "Wrong. It terminates."
+    }
+  },
+  {
+    "topic": "Sets",
+    "prompt": "What is the result of: len({1,2,2,3})",
+    "options": [
+      "4",
+      "3",
+      "2",
+      "TypeError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Duplicates are removed.",
+      "1": "Correct. The set is {1,2,3}.",
+      "2": "Wrong. There are three unique elements.",
+      "3": "Wrong. This is valid."
+    }
+  },
+  {
+    "topic": "Pitfalls",
+    "prompt": "What does this print?\n\nprint([[]] * 2)",
+    "options": [
+      "[[], []] independent lists",
+      "[[]] twice",
+      "Two references to the same inner list",
+      "TypeError"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. The inner list is shared (same object repeated).",
+      "1": "Wrong. It becomes a list of length 2, not a nested repetition conceptually.",
+      "2": "Correct. List multiplication repeats references to the same object.",
+      "3": "Wrong. No error."
+    }
+  },
+  {
+    "topic": "Functions",
+    "prompt": "Which statement about default arguments is TRUE?",
+    "options": [
+      "Evaluated at call time",
+      "Evaluated once at function definition",
+      "Reset every call",
+      "Must be immutable"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Defaults are evaluated when the def runs (definition time).",
+      "1": "Correct. This is why mutable defaults can be dangerous.",
+      "2": "Wrong. They persist across calls.",
+      "3": "Wrong. They can be mutable; it’s just often a pitfall."
+    }
+  },
+  {
+    "topic": "Functions",
+    "prompt": "What does this print?\n\ndef f(x, acc=[]):\n    acc.append(x)\n    return acc\n\nprint(f(1))\nprint(f(2))",
+    "options": [
+      "[1] then [2]",
+      "[1] then [1, 2]",
+      "[1] then [1]",
+      "TypeError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. acc is the same list each call.",
+      "1": "Correct. The default list is reused and grows.",
+      "2": "Wrong. It doesn’t reset automatically.",
+      "3": "Wrong. Valid code."
+    }
+  },
+  {
+    "topic": "Scope",
+    "prompt": "What does this print?\n\nx = 10\n\ndef g():\n    x = 5\n\ng()\nprint(x)",
+    "options": [
+      "5",
+      "10",
+      "UnboundLocalError",
+      "NameError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Local assignment does not affect global x.",
+      "1": "Correct. The global x stays 10.",
+      "2": "Wrong. No read-before-assign occurs here.",
+      "3": "Wrong. x exists globally."
+    }
+  },
+  {
+    "topic": "Scope",
+    "prompt": "What happens?\n\nx = 1\n\ndef h():\n    print(x)\n    x = 2\n\nh()",
+    "options": [
+      "Prints 1",
+      "Prints 2",
+      "UnboundLocalError",
+      "NameError"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. Python treats x as local due to assignment in the function.",
+      "1": "Wrong. It fails before printing.",
+      "2": "Correct. Local variable referenced before assignment.",
+      "3": "Wrong. Name exists, but scope rules make it local."
+    }
+  },
+  {
+    "topic": "Scope",
+    "prompt": "Which keyword allows assigning to a variable in an enclosing (non-global) scope?",
+    "options": [
+      "global",
+      "nonlocal",
+      "outer",
+      "static"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. global targets module scope, not enclosing function scope.",
+      "1": "Correct. nonlocal targets nearest enclosing function scope.",
+      "2": "Wrong. Not a Python keyword.",
+      "3": "Wrong. Not a Python keyword."
+    }
+  },
+  {
+    "topic": "Strings",
+    "prompt": "What does this print?\n\nprint('a' < 'B')",
+    "options": [
+      "True",
+      "False",
+      "TypeError",
+      "Depends on locale"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Unicode code points put 'B' before 'a'.",
+      "1": "Correct. 'B' has a smaller code point than 'a'.",
+      "2": "Wrong. String comparisons are valid.",
+      "3": "Wrong. Python uses Unicode code points, not locale."
+    }
+  },
+  {
+    "topic": "Strings",
+    "prompt": "What is the output?\n\nprint(','.join(['a', 'b', 'c']))",
+    "options": [
+      "a b c",
+      "a,b,c",
+      "['a','b','c']",
+      "TypeError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. join uses the separator exactly (comma here).",
+      "1": "Correct. Comma-separated string.",
+      "2": "Wrong. That would be repr of a list, not join output.",
+      "3": "Wrong. join works with strings."
+    }
+  },
+  {
+    "topic": "Strings/Bytes",
+    "prompt": "Which converts bytes to str using UTF-8?",
+    "options": [
+      "b.encode('utf-8')",
+      "b.decode('utf-8')",
+      "str(b)",
+      "bytes(b)"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. encode converts str -> bytes.",
+      "1": "Correct. decode converts bytes -> str.",
+      "2": "Wrong. str(b) produces a representation like \"b'...'\".",
+      "3": "Wrong. bytes(b) expects an int iterable or buffer; not decoding."
+    }
+  },
+  {
+    "topic": "Strings",
+    "prompt": "What does this print?\n\nprint('hello'[:3])",
+    "options": [
+      "hel",
+      "ell",
+      "llo",
+      "IndexError"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. Slice from start up to index 3 (exclusive).",
+      "1": "Wrong. That would be 'hello'[1:4].",
+      "2": "Wrong. That would be 'hello'[2:5].",
+      "3": "Wrong. Slicing is safe; no IndexError."
+    }
+  },
+  {
+    "topic": "Sequences",
+    "prompt": "Which statement about slicing is TRUE? (Select ALL that apply)",
+    "options": [
+      "Slicing a list returns a new list",
+      "Slicing deep-copies nested objects",
+      "Slicing supports a step value",
+      "Slicing always returns a view"
+    ],
+    "correct": [
+      0,
+      2
+    ],
+    "explanations": {
+      "0": "Correct. It creates a new list object (shallow copy).",
+      "1": "Wrong. It’s a shallow copy; nested objects are shared.",
+      "2": "Correct. list[start:stop:step] supports step.",
+      "3": "Wrong. Python list slicing is not a view (unlike some libraries)."
+    }
+  },
+  {
+    "topic": "Sequences",
+    "prompt": "What is printed?\n\nx = [1,2,3]\nx[1:2] = [9,9]\nprint(x)",
+    "options": [
+      "[1, 9, 3]",
+      "[1, 9, 9, 3]",
+      "[9, 9]",
+      "TypeError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Replacing a slice can change length; here it inserts two items.",
+      "1": "Correct. The slice [2] is replaced by [9,9].",
+      "2": "Wrong. That would replace the whole list.",
+      "3": "Wrong. Slice assignment is valid."
+    }
+  },
+  {
+    "topic": "Sorting",
+    "prompt": "What does this print?\n\nprint(sorted(['10','2','1']))",
+    "options": [
+      "['1','2','10']",
+      "['10','1','2']",
+      "['10','2','1']",
+      "TypeError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. That would be numeric sort, but these are strings.",
+      "1": "Correct. Lexicographic string order: '10' < '1' < '2' is false; actual is '10','1','2'.",
+      "2": "Wrong. That’s the original order, not sorted.",
+      "3": "Wrong. Sorting strings is valid."
+    }
+  },
+  {
+    "topic": "Sorting",
+    "prompt": "How do you sort numbers by absolute value?",
+    "options": [
+      "sorted(nums, key=abs)",
+      "sorted(abs(nums))",
+      "nums.sort(abs)",
+      "sort(nums, abs)"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. key=abs sorts by absolute value.",
+      "1": "Wrong. abs(nums) is invalid for a list.",
+      "2": "Wrong. list.sort takes keyword key=..., not a positional function like that.",
+      "3": "Wrong. sort(...) is not a built-in function in that form."
+    }
+  },
+  {
+    "topic": "Stdlib",
+    "prompt": "What does enumerate(iterable) produce?",
+    "options": [
+      "Only items",
+      "Only indexes",
+      "Pairs of (index, item)",
+      "Triples of (index, item, length)"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. It includes indexes too.",
+      "1": "Wrong. It includes items too.",
+      "2": "Correct. enumerate yields (index, value) pairs.",
+      "3": "Wrong. No length is included."
+    }
+  },
+  {
+    "topic": "Stdlib",
+    "prompt": "What is printed?\n\nprint(list(zip([1,2,3], ['a','b'])))",
+    "options": [
+      "[(1,'a'), (2,'b')]",
+      "[(1,'a'), (2,'b'), (3,None)]",
+      "TypeError",
+      "[(1,'a'), (2,'b'), (3,'c')]"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. zip stops at the shortest iterable.",
+      "1": "Wrong. zip does not pad with None by default.",
+      "2": "Wrong. This is valid.",
+      "3": "Wrong. 'c' is not present."
+    }
+  },
+  {
+    "topic": "Dicts",
+    "prompt": "What does dict.get('k', 99) return if 'k' is missing?",
+    "options": [
+      "Raises KeyError",
+      "Returns None always",
+      "Returns 99",
+      "Adds 'k' with 99"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. get does not raise KeyError.",
+      "1": "Wrong. It returns default if provided.",
+      "2": "Correct. Default is returned when key is missing.",
+      "3": "Wrong. get does not mutate the dict."
+    }
+  },
+  {
+    "topic": "Dicts",
+    "prompt": "What does this print?\n\nd = {'a': 1}\nprint(d.setdefault('b', 2), d)",
+    "options": [
+      "2 {'a': 1, 'b': 2}",
+      "None {'a': 1}",
+      "KeyError",
+      "2 {'a': 1}"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. setdefault inserts missing key and returns the value.",
+      "1": "Wrong. It will insert 'b' and return 2.",
+      "2": "Wrong. It does not raise KeyError.",
+      "3": "Wrong. It mutates the dict by adding 'b'."
+    }
+  },
+  {
+    "topic": "Stdlib",
+    "prompt": "Which module is typically used to encode/decode JSON?",
+    "options": [
+      "pickle",
+      "json",
+      "marshal",
+      "csv"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. pickle is Python-specific serialization, not JSON.",
+      "1": "Correct. The json module handles JSON encoding/decoding.",
+      "2": "Wrong. marshal is low-level and not for JSON interchange.",
+      "3": "Wrong. csv is for delimited text tables."
+    }
+  },
+  {
+    "topic": "Stdlib",
+    "prompt": "What is printed?\n\nprint(sum([1,2,3], 10))",
+    "options": [
+      "6",
+      "13",
+      "16",
+      "TypeError"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. That would be sum without a start value.",
+      "1": "Wrong. 10+1+2+3 is not 13.",
+      "2": "Correct. sum(iterable, start) starts from 10 → 16.",
+      "3": "Wrong. This usage is valid."
+    }
+  },
+  {
+    "topic": "Stdlib",
+    "prompt": "What does this print?\n\nprint(any([0, '', None, 5]))",
+    "options": [
+      "True",
+      "False",
+      "TypeError",
+      "None"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. any() returns True if any element is truthy (5 is truthy).",
+      "1": "Wrong. There is a truthy element.",
+      "2": "Wrong. This is valid input.",
+      "3": "Wrong. any returns True/False."
+    }
+  },
+  {
+    "topic": "Stdlib",
+    "prompt": "What does this print?\n\nprint(all([1, 'x', [], 3]))",
+    "options": [
+      "True",
+      "False",
+      "TypeError",
+      "Depends on order"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. [] is falsy, making all() False.",
+      "1": "Correct. all() requires all elements truthy; [] is falsy.",
+      "2": "Wrong. This is valid.",
+      "3": "Wrong. all evaluates deterministically."
+    }
+  },
+  {
+    "topic": "Exceptions",
+    "prompt": "Which statement about try/else is TRUE?",
+    "options": [
+      "else runs only if an exception happens",
+      "else runs only if no exception happens",
+      "else always runs",
+      "else replaces finally"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. That’s the except block’s job.",
+      "1": "Correct. try/else executes else when no exception occurs.",
+      "2": "Wrong. else is conditional on no exception.",
+      "3": "Wrong. finally has a different role."
+    }
+  },
+  {
+    "topic": "Exceptions",
+    "prompt": "What happens?\n\ntry:\n    1/0\nfinally:\n    print('done')",
+    "options": [
+      "Prints done and continues normally",
+      "Prints done then raises ZeroDivisionError",
+      "Raises before printing",
+      "SyntaxError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. The exception still occurs.",
+      "1": "Correct. finally runs, then the exception propagates.",
+      "2": "Wrong. finally prints before propagation.",
+      "3": "Wrong. Syntax is valid."
+    }
+  },
+  {
+    "topic": "Exceptions",
+    "prompt": "Inside an except block, what does 'raise' with no arguments do?",
+    "options": [
+      "Raises SyntaxError",
+      "Re-raises the current exception",
+      "Raises None",
+      "Suppresses the exception"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. It's legal syntax in an except block.",
+      "1": "Correct. It re-raises the active exception.",
+      "2": "Wrong. It doesn't raise None.",
+      "3": "Wrong. It does the opposite of suppressing."
+    }
+  },
+  {
+    "topic": "IO",
+    "prompt": "Which is TRUE about 'with open(...) as f:'?",
+    "options": [
+      "It disables buffering",
+      "It always loads the file into memory",
+      "It automatically closes even if errors happen",
+      "It prevents exceptions"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. Buffering behavior depends on mode and params.",
+      "1": "Wrong. You still read explicitly.",
+      "2": "Correct. Context manager closes file on exit.",
+      "3": "Wrong. Exceptions can still occur."
+    }
+  },
+  {
+    "topic": "IO",
+    "prompt": "Which mode opens a file for appending text?",
+    "options": [
+      "'r'",
+      "'w'",
+      "'a'",
+      "'rb'"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. 'r' is read mode.",
+      "1": "Wrong. 'w' truncates and writes.",
+      "2": "Correct. 'a' appends to the end.",
+      "3": "Wrong. 'rb' is read-binary."
+    }
+  },
+  {
+    "topic": "OOP",
+    "prompt": "What does @staticmethod do?",
+    "options": [
+      "Passes instance as first arg",
+      "Passes class as first arg",
+      "No implicit first argument",
+      "Makes method private"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. That’s normal instance methods.",
+      "1": "Wrong. That’s @classmethod.",
+      "2": "Correct. staticmethod has no implicit self/cls.",
+      "3": "Wrong. Python has no true private methods via decorator."
+    }
+  },
+  {
+    "topic": "OOP",
+    "prompt": "What does @classmethod receive as its first argument?",
+    "options": [
+      "self",
+      "cls",
+      "both self and cls",
+      "nothing"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. self is for instance methods.",
+      "1": "Correct. cls is the class object.",
+      "2": "Wrong. It receives only cls implicitly.",
+      "3": "Wrong. It does receive cls."
+    }
+  },
+  {
+    "topic": "OOP",
+    "prompt": "What is printed?\n\nclass A:\n    def f(self):\n        return 'A'\n\nclass B(A):\n    def f(self):\n        return super().f() + 'B'\n\nprint(B().f())",
+    "options": [
+      "A",
+      "B",
+      "AB",
+      "BA"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. B overrides f and adds 'B'.",
+      "1": "Wrong. It includes A's result too.",
+      "2": "Correct. super().f() returns 'A', then + 'B' → 'AB'.",
+      "3": "Wrong. Order is A then B."
+    }
+  },
+  {
+    "topic": "OOP",
+    "prompt": "If a class defines __len__ returning 0 and no __bool__, what is bool(obj)?",
+    "options": [
+      "True",
+      "False",
+      "TypeError",
+      "Depends only on __bool__"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. __len__ of 0 makes it falsy.",
+      "1": "Correct. Python uses __len__ when __bool__ is absent.",
+      "2": "Wrong. __len__ returning int is valid.",
+      "3": "Wrong. __len__ also affects truthiness."
+    }
+  },
+  {
+    "topic": "OOP",
+    "prompt": "Which special method enables obj[index]?",
+    "options": [
+      "__getitem__",
+      "__getattr__",
+      "__index__",
+      "__slice__"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. __getitem__ is used for indexing.",
+      "1": "Wrong. __getattr__ handles missing attributes.",
+      "2": "Wrong. __index__ is for converting an object to an integer index.",
+      "3": "Wrong. __slice__ is not used like this in modern Python."
+    }
+  },
+  {
+    "topic": "Functional",
+    "prompt": "What is the output?\n\nprint(list(map(lambda x: x*x, [1,2,3])))",
+    "options": [
+      "[1, 4, 9]",
+      "[1, 2, 3]",
+      "<map object ...>",
+      "TypeError"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. map applies the function to each element.",
+      "1": "Wrong. That would be identity function behavior.",
+      "2": "Wrong. list(...) forces evaluation; without list it would show a map object.",
+      "3": "Wrong. This is valid."
+    }
+  },
+  {
+    "topic": "Functional",
+    "prompt": "What does this print?\n\nprint(list(filter(None, [0, 1, '', 'a'])))",
+    "options": [
+      "[0, 1, '', 'a']",
+      "[1, 'a']",
+      "['a']",
+      "TypeError"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. filter(None, ...) removes falsy values.",
+      "1": "Correct. 0 and '' are falsy; 1 and 'a' remain.",
+      "2": "Wrong. 1 is also truthy so it remains too.",
+      "3": "Wrong. This is valid usage."
+    }
+  },
+  {
+    "topic": "Dicts",
+    "prompt": "What is the output?\n\nx = {'a': 1, 'b': 2}\nprint(list(x))",
+    "options": [
+      "['a', 'b'] (in insertion order)",
+      "['a', 1, 'b', 2]",
+      "[('a',1), ('b',2)]",
+      "TypeError"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. Iterating a dict yields its keys (in insertion order in modern Python).",
+      "1": "Wrong. Iteration does not yield values inline.",
+      "2": "Wrong. That would be list(x.items()).",
+      "3": "Wrong. list(dict) is valid."
+    }
+  },
+  {
+    "topic": "Concurrency",
+    "prompt": "Which is TRUE about the GIL in CPython?",
+    "options": [
+      "It prevents I/O concurrency entirely",
+      "It prevents true parallel execution of CPU-bound Python bytecode in threads",
+      "It prevents multiprocessing from using multiple cores",
+      "It makes asyncio impossible"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. I/O-bound threads can still overlap while waiting on I/O.",
+      "1": "Correct. CPU-bound threads won’t run Python bytecode in true parallel.",
+      "2": "Wrong. multiprocessing uses separate processes and can use multiple cores.",
+      "3": "Wrong. asyncio is cooperative and works fine."
+    }
+  },
+  {
+    "topic": "Concurrency",
+    "prompt": "What does 'await' require on the right-hand side?",
+    "options": [
+      "A normal function",
+      "An awaitable (coroutine/future/task)",
+      "Only a generator",
+      "A thread object"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Normal functions return values immediately; not awaitable.",
+      "1": "Correct. await works with awaitables.",
+      "2": "Wrong. Generators are not awaitables unless wrapped/converted.",
+      "3": "Wrong. Threads are not awaitables by default."
+    }
+  },
+  {
+    "topic": "Typing",
+    "prompt": "typing.Optional[int] means:",
+    "options": [
+      "int only",
+      "int or None",
+      "any type",
+      "a required int"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Optional allows None.",
+      "1": "Correct. Optional[int] == Union[int, None].",
+      "2": "Wrong. That would be Any.",
+      "3": "Wrong. Optional is the opposite of required-only."
+    }
+  },
+  {
+    "topic": "Strings",
+    "prompt": "What does this print?\n\ns = 'abc'\ntry:\n    s[0] = 'z'\nexcept Exception as e:\n    print(type(e).__name__)",
+    "options": [
+      "ValueError",
+      "TypeError",
+      "IndexError",
+      "No output"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Not a ValueError.",
+      "1": "Correct. Strings are immutable; item assignment raises TypeError.",
+      "2": "Wrong. Index 0 is valid; immutability is the issue.",
+      "3": "Wrong. The exception is caught and printed."
+    }
+  },
+  {
+    "topic": "References",
+    "prompt": "What does this print?\n\nprint([1,2] == [1,2], [1,2] is [1,2])",
+    "options": [
+      "True True",
+      "True False",
+      "False True",
+      "False False"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Separate list literals are different objects → 'is' is False.",
+      "1": "Correct. Values equal, identities differ.",
+      "2": "Wrong. Equality is True here.",
+      "3": "Wrong. Equality is True."
+    }
+  },
+  {
+    "topic": "Dicts",
+    "prompt": "Which statement about dict membership is TRUE?\n\n('x' in {'x': 1})",
+    "options": [
+      "Checks values for membership",
+      "Checks keys for membership",
+      "Raises TypeError",
+      "Depends on hash seed"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. 'in' on a dict checks keys, not values.",
+      "1": "Correct. Dict membership tests keys.",
+      "2": "Wrong. It's valid.",
+      "3": "Wrong. Meaning is deterministic; hash seed doesn't change correctness."
+    }
+  }
+]
