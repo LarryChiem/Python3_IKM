@@ -52,3 +52,6 @@ h1{font-size:22px;margin:0}
   .row{grid-template-columns:1fr .7fr .9fr .7fr}
   h1{font-size:20px}
 }
+
+.donate { border-top: 1px solid #eee; padding-top: 14px; margin-top: 10px; }
+.donateBtns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }

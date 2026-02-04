@@ -3,6 +3,27 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 const TOTAL_QUESTIONS = 54
 const TIME_LIMIT_SECONDS = 135 * 60
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+const DONATE = {
+  paypal: "https://www.paypal.me/larrychiem",
+  github: "https://github.com/sponsors/LarryChiem",
+  coffee: "https://www.buymeacoffee.com/larrychiem",
+}
+
+function DonateBlock() {
+    return (
+        <section className="donate">
+            <h2>Support</h2>
+            <p className="muted">
+                This app is free and has no ads. If it helped you, donations are optional and appreciated.
+            </p>
+            <div className="donateBtns">
+                <a className="btn" href={DONATE.paypal} target="_blank" rel="noreferrer">Donate (Paypal)</a>
+                <a className="btn ghost" href={DONATE.github} target="_blank" rel="noreferrer">Sponsor (GitHub)</a>
+                <a className="btn ghost" href={DONATE.coffee} target="_blank" rel="noreferrer">Buy me a coffee</a>
+            </div>
+        </section>
+    )
+}
 
 function fmtMMSS(totalSeconds) {
   const m = String(Math.floor(totalSeconds / 60)).padStart(2, '0')
@@ -271,6 +292,7 @@ function startExam() {
                 </div>
               )}
             </section>
+            <DonateBlock />
           </div>
         )}
 
@@ -349,6 +371,8 @@ function startExam() {
               <button className="btn" onClick={finishAndLog}>Save Attempt</button>
               <button className="btn ghost" onClick={() => { setStartTs(null); setExam([]); }}>Back</button>
             </div>
+
+            <DonateBlock />
           </div>
         )}
       </main>
