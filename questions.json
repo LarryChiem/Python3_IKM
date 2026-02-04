@@ -918,7 +918,7 @@
   },
   {
     "topic": "Concurrency",
-    "prompt": "Which is TRUE about the GIL in CPython?",
+    "prompt": "Which is TRUE about the Python's Global Interpreter Lock (GIL) in CPython?",
     "options": [
       "It prevents I/O concurrency entirely",
       "It prevents true parallel execution of CPU-bound Python bytecode in threads",
@@ -930,7 +930,7 @@
     ],
     "explanations": {
       "0": "Wrong. I/O-bound threads can still overlap while waiting on I/O.",
-      "1": "Correct. CPU-bound threads won’t run Python bytecode in true parallel.",
+      "1": "Correct. CPU-bound threads won’t run Python bytecode in true parallel. (GIL) is a mutex that ensures only one thread executes Python bytecode at a time in CPython, the standard Python implementation.",
       "2": "Wrong. multiprocessing uses separate processes and can use multiple cores.",
       "3": "Wrong. asyncio is cooperative and works fine."
     }
@@ -1028,6 +1028,880 @@
       "1": "Correct. Dict membership tests keys.",
       "2": "Wrong. It's valid.",
       "3": "Wrong. Meaning is deterministic; hash seed doesn't change correctness."
+    }
+  },
+  {
+    "topic": "Decorators",
+    "prompt": "What does this print?\n\ndef deco(f):\n    def wrapper(*a, **k):\n        return f(*a, **k) + 1\n    return wrapper\n\n@deco\ndef f():\n    return 10\n\nprint(f())",
+    "options": ["10", "11", "TypeError", "wrapper"],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. The decorator modifies the function result.",
+      "1": "Correct. wrapper calls f() (10) then adds 1.",
+      "2": "Wrong. All operations are valid.",
+      "3": "Wrong. It prints the return value, not the function object."
+    }
+  },
+  {
+    "topic": "Closures",
+    "prompt": "What does this print?\n\nfuncs = []\nfor i in range(3):\n    funcs.append(lambda: i)\n\nprint([f() for f in funcs])",
+    "options": ["[0, 1, 2]", "[2, 2, 2]", "[3, 3, 3]", "Raises NameError"],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Late binding means lambdas read i when called, not when created.",
+      "1": "Correct. i ends at 2, so all lambdas return 2.",
+      "2": "Wrong. range(3) ends with i == 2.",
+      "3": "Wrong. i exists in the enclosing scope at call time."
+    }
+  },
+  {
+    "topic": "Closures",
+    "prompt": "How do you fix the late-binding issue in the previous code (best answer)?",
+    "options": [
+      "Use lambda i=i: i",
+      "Use global i",
+      "Convert i to str",
+      "Use nonlocal i"
+    ],
+    "correct": [0],
+    "explanations": {
+      "0": "Correct. Default args capture the current value at definition time.",
+      "1": "Wrong. global doesn't capture per-iteration values.",
+      "2": "Wrong. Type conversion doesn't address binding.",
+      "3": "Wrong. nonlocal is for assigning into enclosing scopes, not capturing loop values."
+    }
+  },
+  {
+    "topic": "Context Managers",
+    "prompt": "What does this print?\n\nclass C:\n    def __enter__(self):\n        print('enter')\n        return 123\n    def __exit__(self, exc_type, exc, tb):\n        print('exit')\n        return True\n\nwith C() as x:\n    print(x)\n    1/0\nprint('after')",
+    "options": [
+      "enter\\n123\\nexit\\nafter",
+      "enter\\n123\\nexit",
+      "enter\\n123 then ZeroDivisionError",
+      "enter\\nexit then ZeroDivisionError"
+    ],
+    "correct": [0],
+    "explanations": {
+      "0": "Correct. __exit__ returns True which suppresses the exception, then execution continues.",
+      "1": "Wrong. It continues to print 'after' because exception is suppressed.",
+      "2": "Wrong. Exception is suppressed due to return True in __exit__.",
+      "3": "Wrong. The body prints x before the exception occurs."
+    }
+  },
+  {
+    "topic": "Iteration Protocol",
+    "prompt": "Which statement is TRUE about iterators?",
+    "options": [
+      "Every iterable is an iterator",
+      "An iterator must implement __iter__ and __next__",
+      "__iter__ must return a new independent iterator each time",
+      "Iterators can be restarted by calling iter(it)"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Iterables produce iterators; they aren't necessarily iterators themselves.",
+      "1": "Correct. That's the core iterator protocol.",
+      "2": "Wrong. That's typical for iterables; iterators usually return themselves from __iter__.",
+      "3": "Wrong. Most iterators are one-shot and cannot be restarted."
+    }
+  },
+  {
+    "topic": "Comprehensions",
+    "prompt": "What does this produce?\n\n{x: x*x for x in [1,1,2]}",
+    "options": [
+      "{1: 1, 2: 4} (last wins)",
+      "{1: 1, 1: 1, 2: 4}",
+      "{1: 1, 2: 2}",
+      "Raises ValueError for duplicate keys"
+    ],
+    "correct": [0],
+    "explanations": {
+      "0": "Correct. Dict keys are unique; later assignments overwrite earlier ones.",
+      "1": "Wrong. Dicts cannot contain duplicate keys.",
+      "2": "Wrong. Value for 2 should be 4.",
+      "3": "Wrong. No error is raised."
+    }
+  },
+  {
+    "topic": "Dataclasses",
+    "prompt": "What is TRUE about a frozen dataclass?",
+    "options": [
+      "It prevents rebinding of all variables",
+      "It prevents attribute assignment (like immutability) after creation",
+      "It deep-freezes nested mutable fields",
+      "It cannot have default values"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. It only affects dataclass instance attribute assignment, not variables outside.",
+      "1": "Correct. Frozen prevents setting attributes after init.",
+      "2": "Wrong. Nested objects can still be mutated if they are mutable.",
+      "3": "Wrong. Frozen dataclasses can still have defaults."
+    }
+  },
+  {
+    "topic": "Exceptions",
+    "prompt": "What does this print?\n\ntry:\n    raise ValueError('x')\nexcept Exception as e:\n    print(type(e).__name__)\nelse:\n    print('else')\nfinally:\n    print('finally')",
+    "options": [
+      "ValueError\\nfinally",
+      "Exception\\nelse\\nfinally",
+      "ValueError\\nelse\\nfinally",
+      "ValueError only"
+    ],
+    "correct": [0],
+    "explanations": {
+      "0": "Correct. except runs, else does not, finally always runs.",
+      "1": "Wrong. The exception type printed is ValueError, not Exception.",
+      "2": "Wrong. else doesn't run when an exception occurs.",
+      "3": "Wrong. finally always runs."
+    }
+  },
+  {
+    "topic": "Imports",
+    "prompt": "Which is TRUE about `import module` vs `from module import name`?",
+    "options": [
+      "They are identical in all cases",
+      "`from module import name` binds `name` directly in the importing namespace",
+      "`import module` binds all module attributes into globals",
+      "`from module import name` prevents module code from executing"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. They bind different names in the importing scope.",
+      "1": "Correct. The imported name is bound directly (no module prefix needed).",
+      "2": "Wrong. `import module` binds the module object only.",
+      "3": "Wrong. Module code still executes on first import."
+    }
+  },
+  {
+    "topic": "Async",
+    "prompt": "What does `await` require?",
+    "options": [
+      "A regular function",
+      "An awaitable (coroutine/future/task)",
+      "A generator expression",
+      "A thread object"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Regular functions are not awaitable.",
+      "1": "Correct. await works with awaitables.",
+      "2": "Wrong. Generators are not awaitables unless adapted.",
+      "3": "Wrong. Threads are not awaitables by default."
+    }
+  },
+  {
+    "topic": "GIL",
+    "prompt": "Which statement best describes the CPython GIL?",
+    "options": [
+      "Threads cannot be used at all",
+      "Threads cannot run CPU-bound Python bytecode in true parallel",
+      "Multiprocessing is also limited to one core",
+      "Asyncio bypasses the GIL for CPU work"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Threads can be useful for I/O-bound workloads.",
+      "1": "Correct. CPU-bound work doesn't gain true parallelism in threads under CPython.",
+      "2": "Wrong. Multiprocessing uses multiple processes and can use multiple cores.",
+      "3": "Wrong. Asyncio is cooperative; CPU work still blocks unless offloaded."
+    }
+  },
+  {
+    "topic": "Mutability",
+    "prompt": "What does this print?\n\na = ([],)\na[0].append(1)\nprint(a)",
+    "options": [
+      "TypeError because tuple is immutable",
+      "([],)",
+      "([1],)",
+      "Raises AttributeError"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. The tuple can't be rebound, but the list inside can be mutated.",
+      "1": "Wrong. The list was appended to.",
+      "2": "Correct. The list inside the tuple becomes [1].",
+      "3": "Wrong. list.append exists."
+    }
+  },
+  {
+    "topic": "Descriptors",
+    "prompt": "Which mechanism powers `@property`?",
+    "options": [
+      "Metaclasses only",
+      "Descriptors (__get__/__set__)",
+      "Monkey patching",
+      "The GIL"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Metaclasses are not required for property.",
+      "1": "Correct. property implements the descriptor protocol.",
+      "2": "Wrong. Monkey patching is unrelated.",
+      "3": "Wrong. The GIL is unrelated."
+    }
+  },
+  {
+    "topic": "OOP",
+    "prompt": "What does this print?\n\nclass A:\n    x = 1\n\nclass B(A):\n    x = 2\n\nprint(A.x, B.x, B().x)",
+    "options": [
+      "1 1 1",
+      "1 2 2",
+      "2 2 1",
+      "2 1 2"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. B overrides x.",
+      "1": "Correct. A.x=1, B.x=2, instance finds B.x=2.",
+      "2": "Wrong. A.x stays 1.",
+      "3": "Wrong. A.x is not 2."
+    }
+  },
+  {
+    "topic": "Hashing",
+    "prompt": "Why can a tuple be used as a dict key but a list cannot (in general)?",
+    "options": [
+      "Tuples are faster",
+      "Lists are ordered",
+      "Tuples are (generally) immutable and hashable; lists are mutable and unhashable",
+      "Lists cannot contain strings"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. Speed isn't the rule for hashability.",
+      "1": "Wrong. Both are ordered sequences.",
+      "2": "Correct. Mutability breaks hash invariants.",
+      "3": "Wrong. Lists can contain strings."
+    }
+  },
+  {
+    "topic": "Typing",
+    "prompt": "What does Optional[int] mean?",
+    "options": [
+      "int only",
+      "int or None",
+      "any type",
+      "a required int"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Optional includes None.",
+      "1": "Correct. Optional[int] == Union[int, None].",
+      "2": "Wrong. That would be Any.",
+      "3": "Wrong. Optional suggests it can be None."
+    }
+  },
+  {
+    "topic": "Functional",
+    "prompt": "What does this print?\n\nprint(list(filter(None, [0, 1, '', 'a', None])))",
+    "options": [
+      "[0, 1, '', 'a', None]",
+      "[1, 'a']",
+      "['a']",
+      "TypeError"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. filter(None, ...) removes falsy values.",
+      "1": "Correct. Keeps truthy values: 1 and 'a'.",
+      "2": "Wrong. 1 is also truthy.",
+      "3": "Wrong. This is valid."
+    }
+  },
+  {
+    "topic": "Evaluation Order",
+    "prompt": "What does this print?\n\nx = 0\nx = x + 1 if True else x + 100\nprint(x)",
+    "options": [
+      "0",
+      "1",
+      "100",
+      "101"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. The conditional expression takes the True branch.",
+      "1": "Correct. True branch evaluates to x+1 (0+1).",
+      "2": "Wrong. Else branch is not evaluated.",
+      "3": "Wrong. Only one branch is evaluated."
+    }
+  },
+  {
+    "topic": "Stdlib",
+    "prompt": "What is the output?\n\nimport math\nprint(math.isclose(0.1 + 0.2, 0.3))",
+    "options": [
+      "True",
+      "False",
+      "TypeError",
+      "Depends on OS"
+    ],
+    "correct": [0],
+    "explanations": {
+      "0": "Correct. isclose checks approximate equality with tolerances.",
+      "1": "Wrong. isclose is designed for floating-point comparisons.",
+      "2": "Wrong. This is valid usage.",
+      "3": "Wrong. Deterministic."
+    }
+  },
+  {
+    "topic": "Performance",
+    "prompt": "Which is generally more memory-efficient for large sequences?",
+    "options": [
+      "List comprehension",
+      "Generator expression",
+      "Building a list then iterating",
+      "Converting to tuple first"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Lists materialize all items immediately.",
+      "1": "Correct. Generators produce items lazily.",
+      "2": "Wrong. It creates the whole list in memory.",
+      "3": "Wrong. Tuples still store all items."
+    }
+  },
+  {
+    "topic": "MRO",
+    "prompt": "What determines method resolution order (MRO) in Python?",
+    "options": [
+      "Depth-first search",
+      "Breadth-first search",
+      "C3 linearization",
+      "Order of class definition"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. Python does not use naive depth-first search.",
+      "1": "Wrong. Breadth-first alone is insufficient.",
+      "2": "Correct. Python uses C3 linearization for MRO.",
+      "3": "Wrong. Definition order alone is not sufficient."
+    }
+  },
+  {
+    "topic": "MRO",
+    "prompt": "What does this print?\n\nclass A: pass\nclass B(A): pass\nclass C(A): pass\nclass D(B, C): pass\n\nprint(D.__mro__)",
+    "options": [
+      "(D, B, C, A, object)",
+      "(D, C, B, A, object)",
+      "(D, B, A, C, object)",
+      "Raises TypeError"
+    ],
+    "correct": [0],
+    "explanations": {
+      "0": "Correct. This follows C3 linearization.",
+      "1": "Wrong. Order of bases is respected.",
+      "2": "Wrong. A must come after both B and C.",
+      "3": "Wrong. This hierarchy is valid."
+    }
+  },
+  {
+    "topic": "Descriptors",
+    "prompt": "Which methods define the descriptor protocol?",
+    "options": [
+      "__get__ only",
+      "__get__ and __set__",
+      "__get__, __set__, and __delete__",
+      "__call__"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. Descriptors can define more than __get__.",
+      "1": "Wrong. __delete__ is also part of the protocol.",
+      "2": "Correct. These three define descriptor behavior.",
+      "3": "Wrong. __call__ is unrelated."
+    }
+  },
+  {
+    "topic": "Descriptors",
+    "prompt": "Which built-in feature relies on descriptors?",
+    "options": [
+      "for loops",
+      "@property",
+      "lambda",
+      "try/except"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Iteration does not use descriptors.",
+      "1": "Correct. property is implemented using descriptors.",
+      "2": "Wrong. Lambdas are functions.",
+      "3": "Wrong. Exception handling is unrelated."
+    }
+  },
+  {
+    "topic": "Weak References",
+    "prompt": "What is the purpose of weakref?",
+    "options": [
+      "Improve performance",
+      "Prevent garbage collection",
+      "Reference objects without preventing GC",
+      "Make objects immutable"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. weakref is about lifecycle, not speed.",
+      "1": "Wrong. weak references do not prevent GC.",
+      "2": "Correct. weakref allows GC when no strong refs exist.",
+      "3": "Wrong. It does not affect mutability."
+    }
+  },
+  {
+    "topic": "Garbage Collection",
+    "prompt": "What does reference counting fail to handle without GC?",
+    "options": [
+      "Large objects",
+      "Immutable objects",
+      "Circular references",
+      "Function calls"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. Size is irrelevant.",
+      "1": "Wrong. Immutability does not affect reference counting.",
+      "2": "Correct. Cycles require cyclic garbage collection.",
+      "3": "Wrong. Calls do not cause leaks."
+    }
+  },
+  {
+    "topic": "Contextlib",
+    "prompt": "What does @contextmanager allow you to do?",
+    "options": [
+      "Create decorators",
+      "Create generators",
+      "Create context managers using yield",
+      "Suppress exceptions globally"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. contextmanager is not for decorators in general.",
+      "1": "Wrong. Though it uses yield, its purpose is context management.",
+      "2": "Correct. yield splits enter and exit logic.",
+      "3": "Wrong. Exception suppression is optional."
+    }
+  },
+  {
+    "topic": "Contextlib",
+    "prompt": "If a contextmanager generator does not yield, what happens?",
+    "options": [
+      "Nothing",
+      "RuntimeError",
+      "StopIteration",
+      "SyntaxError"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. The context requires a yield.",
+      "1": "Correct. A RuntimeError is raised.",
+      "2": "Wrong. StopIteration is internal.",
+      "3": "Wrong. Syntax is valid."
+    }
+  },
+  {
+    "topic": "Functools",
+    "prompt": "What does functools.lru_cache do?",
+    "options": [
+      "Caches results of function calls",
+      "Caches function bytecode",
+      "Optimizes recursion only",
+      "Makes functions thread-safe"
+    ],
+    "correct": [0],
+    "explanations": {
+      "0": "Correct. Results are memoized based on arguments.",
+      "1": "Wrong. Bytecode is not cached this way.",
+      "2": "Wrong. It works for any function.",
+      "3": "Wrong. Thread safety is not guaranteed."
+    }
+  },
+  {
+    "topic": "Functools",
+    "prompt": "What happens when lru_cache reaches maxsize?",
+    "options": [
+      "Cache clears entirely",
+      "Oldest entries are evicted",
+      "Newest entries are evicted",
+      "Raises MemoryError"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Cache is not fully cleared.",
+      "1": "Correct. Least recently used entries are evicted.",
+      "2": "Wrong. New entries are retained.",
+      "3": "Wrong. Eviction prevents memory errors."
+    }
+  },
+  {
+    "topic": "Itertools",
+    "prompt": "Which itertools function groups consecutive items?",
+    "options": [
+      "groupby",
+      "combinations",
+      "product",
+      "chain"
+    ],
+    "correct": [0],
+    "explanations": {
+      "0": "Correct. groupby groups adjacent elements.",
+      "1": "Wrong. combinations creates tuples.",
+      "2": "Wrong. product computes Cartesian products.",
+      "3": "Wrong. chain concatenates iterables."
+    }
+  },
+  {
+    "topic": "Itertools",
+    "prompt": "What does itertools.count() produce?",
+    "options": [
+      "A finite range",
+      "An infinite iterator",
+      "A list",
+      "Raises StopIteration"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. count is unbounded.",
+      "1": "Correct. It produces an infinite sequence.",
+      "2": "Wrong. It yields values lazily.",
+      "3": "Wrong. It never stops."
+    }
+  },
+  {
+    "topic": "Memory",
+    "prompt": "Which object typically uses the least memory?",
+    "options": [
+      "List",
+      "Tuple",
+      "Set",
+      "Dict"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Lists have extra capacity overhead.",
+      "1": "Correct. Tuples are compact and immutable.",
+      "2": "Wrong. Sets require hashing overhead.",
+      "3": "Wrong. Dicts store key-value pairs."
+    }
+  },
+  {
+    "topic": "CPython Internals",
+    "prompt": "What is Python bytecode?",
+    "options": [
+      "Machine code",
+      "Intermediate representation executed by the VM",
+      "Assembly language",
+      "Source code"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Bytecode is not machine code.",
+      "1": "Correct. Bytecode is run by the Python virtual machine.",
+      "2": "Wrong. Assembly is lower-level.",
+      "3": "Wrong. Bytecode is compiled from source."
+    }
+  },
+  {
+    "topic": "Asyncio",
+    "prompt": "What is the primary purpose of the asyncio event loop?",
+    "options": [
+      "Run threads in parallel",
+      "Schedule and run asynchronous tasks",
+      "Replace the operating system scheduler",
+      "Execute CPU-bound code faster"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. asyncio does not manage OS threads.",
+      "1": "Correct. The event loop schedules and runs async tasks cooperatively.",
+      "2": "Wrong. The OS scheduler is unchanged.",
+      "3": "Wrong. Asyncio does not speed up CPU-bound work."
+    }
+  },
+  {
+    "topic": "Asyncio",
+    "prompt": "What happens if you call an async function without awaiting it?",
+    "options": [
+      "It runs immediately",
+      "It raises a SyntaxError",
+      "It returns a coroutine object",
+      "It blocks the event loop"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. Async functions do not execute until awaited.",
+      "1": "Wrong. This is syntactically valid.",
+      "2": "Correct. Calling returns a coroutine object.",
+      "3": "Wrong. Nothing runs yet."
+    }
+  },
+  {
+    "topic": "Asyncio",
+    "prompt": "Which function is used to run the asyncio event loop in Python 3.7+?",
+    "options": [
+      "loop.run()",
+      "asyncio.execute()",
+      "asyncio.run()",
+      "asyncio.start()"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. loop.run is not the public API.",
+      "1": "Wrong. This function does not exist.",
+      "2": "Correct. asyncio.run() is the recommended entry point.",
+      "3": "Wrong. This function does not exist."
+    }
+  },
+  {
+    "topic": "Typing",
+    "prompt": "What does typing.Protocol enable?",
+    "options": [
+      "Runtime type enforcement",
+      "Nominal subtyping",
+      "Structural subtyping",
+      "Duck typing removal"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. Protocols are for static typing.",
+      "1": "Wrong. Protocols avoid nominal inheritance.",
+      "2": "Correct. Protocols enable structural (duck-typed) subtyping.",
+      "3": "Wrong. Protocols formalize duck typing."
+    }
+  },
+  {
+    "topic": "Typing",
+    "prompt": "What is the runtime effect of type hints?",
+    "options": [
+      "They enforce types automatically",
+      "They slow down execution",
+      "They are mostly ignored at runtime",
+      "They prevent invalid assignments"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. Python does not enforce types by default.",
+      "1": "Wrong. They usually have no runtime cost.",
+      "2": "Correct. Type hints are for tooling, not enforcement.",
+      "3": "Wrong. Invalid assignments are still allowed."
+    }
+  },
+  {
+    "topic": "Metaclasses",
+    "prompt": "When is a metaclass __new__ method executed?",
+    "options": [
+      "When an instance is created",
+      "When a class is defined",
+      "When a module is imported",
+      "When __init__ is called"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Instance creation is handled later.",
+      "1": "Correct. Metaclasses control class creation.",
+      "2": "Wrong. Imports may trigger class definition, but not always.",
+      "3": "Wrong. __init__ refers to instances."
+    }
+  },
+  {
+    "topic": "Metaclasses",
+    "prompt": "Which keyword argument is passed to a metaclass __new__?",
+    "options": [
+      "self",
+      "cls",
+      "bases",
+      "locals"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. self is for instances.",
+      "1": "Wrong. cls refers to the metaclass itself.",
+      "2": "Correct. bases contains base classes of the new class.",
+      "3": "Wrong. locals are passed as a dict, not as this name."
+    }
+  },
+  {
+    "topic": "Imports",
+    "prompt": "Where are imported modules cached?",
+    "options": [
+      "globals()",
+      "builtins",
+      "sys.modules",
+      "__all__"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. globals only affect the current module.",
+      "1": "Wrong. builtins is separate.",
+      "2": "Correct. sys.modules caches loaded modules.",
+      "3": "Wrong. __all__ controls export behavior."
+    }
+  },
+  {
+    "topic": "Imports",
+    "prompt": "What happens if you delete an entry from sys.modules?",
+    "options": [
+      "The module is unloaded from memory",
+      "The module cannot be imported again",
+      "The next import reloads the module",
+      "Python crashes"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. Other references may still exist.",
+      "1": "Wrong. It can be re-imported.",
+      "2": "Correct. The next import reloads the module.",
+      "3": "Wrong. This is safe (though advanced)."
+    }
+  },
+  {
+    "topic": "Multiprocessing",
+    "prompt": "Why does multiprocessing bypass the GIL?",
+    "options": [
+      "It disables the GIL",
+      "Each process has its own interpreter",
+      "It rewrites Python bytecode",
+      "It uses async IO"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. The GIL still exists per process.",
+      "1": "Correct. Each process has its own GIL.",
+      "2": "Wrong. Bytecode is unchanged.",
+      "3": "Wrong. Async IO is unrelated."
+    }
+  },
+  {
+    "topic": "Multiprocessing",
+    "prompt": "What must be true for objects sent between processes?",
+    "options": [
+      "They must be hashable",
+      "They must be immutable",
+      "They must be picklable",
+      "They must be threadsafe"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. Hashability is irrelevant.",
+      "1": "Wrong. Mutable objects can be pickled.",
+      "2": "Correct. Objects are serialized via pickle.",
+      "3": "Wrong. Thread safety is unrelated."
+    }
+  },
+  {
+    "topic": "Collections",
+    "prompt": "What does collections.defaultdict provide?",
+    "options": [
+      "Automatic key deletion",
+      "Default values for missing keys",
+      "Thread safety",
+      "Ordered iteration"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Keys are not deleted.",
+      "1": "Correct. Missing keys are created automatically.",
+      "2": "Wrong. defaultdict is not thread-safe.",
+      "3": "Wrong. Order depends on insertion."
+    }
+  },
+  {
+    "topic": "Collections",
+    "prompt": "What does collections.deque provide over list?",
+    "options": [
+      "Faster random access",
+      "Efficient appends and pops from both ends",
+      "Automatic sorting",
+      "Lower memory usage in all cases"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Deque is not optimized for random access.",
+      "1": "Correct. Deque is optimized for both ends.",
+      "2": "Wrong. Deque does not sort.",
+      "3": "Wrong. Memory usage varies."
+    }
+  },
+  {
+    "topic": "Evaluation",
+    "prompt": "What does short-circuit evaluation mean?",
+    "options": [
+      "Expressions are evaluated faster",
+      "Later operands may not be evaluated",
+      "Evaluation happens in parallel",
+      "Exceptions are suppressed"
+    ],
+    "correct": [1],
+    "explanations": {
+      "0": "Wrong. Speed is not guaranteed.",
+      "1": "Correct. Logical operators may skip evaluation.",
+      "2": "Wrong. Evaluation is sequential.",
+      "3": "Wrong. Exceptions are not suppressed."
+    }
+  },
+  {
+    "topic": "Evaluation",
+    "prompt": "What does this print?\n\nprint(False and (1/0))",
+    "options": [
+      "False",
+      "ZeroDivisionError",
+      "None",
+      "True"
+    ],
+    "correct": [0],
+    "explanations": {
+      "0": "Correct. The second operand is never evaluated.",
+      "1": "Wrong. Short-circuit prevents evaluation.",
+      "2": "Wrong. The result is False.",
+      "3": "Wrong. False and anything is False."
+    }
+  },
+  {
+    "topic": "Performance",
+    "prompt": "Which is typically the fastest membership test?",
+    "options": [
+      "x in list",
+      "x in tuple",
+      "x in set",
+      "x in string"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. List membership is O(n).",
+      "1": "Wrong. Tuple membership is O(n).",
+      "2": "Correct. Set membership is O(1) average case.",
+      "3": "Wrong. Strings require scanning."
+    }
+  },
+  {
+    "topic": "Security",
+    "prompt": "Why is eval() dangerous?",
+    "options": [
+      "It is slow",
+      "It cannot evaluate expressions",
+      "It can execute arbitrary code",
+      "It leaks memory"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. Speed is not the primary risk.",
+      "1": "Wrong. eval can evaluate expressions.",
+      "2": "Correct. eval executes arbitrary code.",
+      "3": "Wrong. Memory leaks are not the main concern."
+    }
+  },
+  {
+    "topic": "Security",
+    "prompt": "Which is safer than eval for parsing literals?",
+    "options": [
+      "exec",
+      "compile",
+      "ast.literal_eval",
+      "globals"
+    ],
+    "correct": [2],
+    "explanations": {
+      "0": "Wrong. exec is also dangerous.",
+      "1": "Wrong. compile does not restrict execution.",
+      "2": "Correct. literal_eval safely parses literals only.",
+      "3": "Wrong. globals exposes namespace."
     }
   }
 ]
