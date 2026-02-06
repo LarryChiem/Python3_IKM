@@ -111,8 +111,8 @@
     ],
     "explanations": {
       "0": "Correct. Tuples are hashable if elements are hashable.",
-      "1": "Wrong. Lists are mutable \u2192 unhashable.",
-      "2": "Wrong. Dicts are mutable \u2192 unhashable.",
+      "1": "Wrong. Lists are mutable → unhashable.",
+      "2": "Wrong. Dicts are mutable → unhashable.",
       "3": "Correct. Integers are hashable."
     }
   },
@@ -131,7 +131,7 @@
     "explanations": {
       "0": "Wrong. y references the same list as x.",
       "1": "Correct. Both variables point to the same list object.",
-      "2": "Wrong. append mutates the list; it doesn\u2019t replace it with [4].",
+      "2": "Wrong. append mutates the list; it doesn’t replace it with [4].",
       "3": "Wrong. No variable is missing."
     }
   },
@@ -225,7 +225,7 @@
       2
     ],
     "explanations": {
-      "0": "Wrong. It doesn\u2019t return None to signal end.",
+      "0": "Wrong. It doesn’t return None to signal end.",
       "1": "Wrong. Generators do not restart on their own.",
       "2": "Correct. Iteration ends via StopIteration.",
       "3": "Wrong. It terminates."
@@ -285,7 +285,7 @@
       "0": "Wrong. Defaults are evaluated when the def runs (definition time).",
       "1": "Correct. This is why mutable defaults can be dangerous.",
       "2": "Wrong. They persist across calls.",
-      "3": "Wrong. They can be mutable; it\u2019s just often a pitfall."
+      "3": "Wrong. They can be mutable; it’s just often a pitfall."
     }
   },
   {
@@ -303,7 +303,7 @@
     "explanations": {
       "0": "Wrong. acc is the same list each call.",
       "1": "Correct. The default list is reused and grows.",
-      "2": "Wrong. It doesn\u2019t reset automatically.",
+      "2": "Wrong. It doesn’t reset automatically.",
       "3": "Wrong. Valid code."
     }
   },
@@ -455,7 +455,7 @@
     ],
     "explanations": {
       "0": "Correct. It creates a new list object (shallow copy).",
-      "1": "Wrong. It\u2019s a shallow copy; nested objects are shared.",
+      "1": "Wrong. It’s a shallow copy; nested objects are shared.",
       "2": "Correct. list[start:stop:step] supports step.",
       "3": "Wrong. Python list slicing is not a view (unlike some libraries)."
     }
@@ -494,7 +494,7 @@
     "explanations": {
       "0": "Wrong. That would be numeric sort, but these are strings.",
       "1": "Correct. Lexicographic string order: '10' < '1' < '2' is false; actual is '10','1','2'.",
-      "2": "Wrong. That\u2019s the original order, not sorted.",
+      "2": "Wrong. That’s the original order, not sorted.",
       "3": "Wrong. Sorting strings is valid."
     }
   },
@@ -627,7 +627,7 @@
     "explanations": {
       "0": "Wrong. That would be sum without a start value.",
       "1": "Wrong. 10+1+2+3 is not 13.",
-      "2": "Correct. sum(iterable, start) starts from 10 \u2192 16.",
+      "2": "Correct. sum(iterable, start) starts from 10 → 16.",
       "3": "Wrong. This usage is valid."
     }
   },
@@ -682,7 +682,7 @@
       1
     ],
     "explanations": {
-      "0": "Wrong. That\u2019s the except block\u2019s job.",
+      "0": "Wrong. That’s the except block’s job.",
       "1": "Correct. try/else executes else when no exception occurs.",
       "2": "Wrong. else is conditional on no exception.",
       "3": "Wrong. finally has a different role."
@@ -777,8 +777,8 @@
       2
     ],
     "explanations": {
-      "0": "Wrong. That\u2019s normal instance methods.",
-      "1": "Wrong. That\u2019s @classmethod.",
+      "0": "Wrong. That’s normal instance methods.",
+      "1": "Wrong. That’s @classmethod.",
       "2": "Correct. staticmethod has no implicit self/cls.",
       "3": "Wrong. Python has no true private methods via decorator."
     }
@@ -817,7 +817,7 @@
     "explanations": {
       "0": "Wrong. B overrides f and adds 'B'.",
       "1": "Wrong. It includes A's result too.",
-      "2": "Correct. super().f() returns 'A', then + 'B' \u2192 'AB'.",
+      "2": "Correct. super().f() returns 'A', then + 'B' → 'AB'.",
       "3": "Wrong. Order is A then B."
     }
   },
@@ -930,7 +930,7 @@
     ],
     "explanations": {
       "0": "Wrong. I/O-bound threads can still overlap while waiting on I/O.",
-      "1": "Correct. CPU-bound threads won\u2019t run Python bytecode in true parallel. (GIL) is a mutex that ensures only one thread executes Python bytecode at a time in CPython, the standard Python implementation.",
+      "1": "Correct. CPU-bound threads won’t run Python bytecode in true parallel. (GIL) is a mutex that ensures only one thread executes Python bytecode at a time in CPython, the standard Python implementation.",
       "2": "Wrong. multiprocessing uses separate processes and can use multiple cores.",
       "3": "Wrong. asyncio is cooperative and works fine."
     }
@@ -1005,7 +1005,7 @@
       1
     ],
     "explanations": {
-      "0": "Wrong. Separate list literals are different objects \u2192 'is' is False.",
+      "0": "Wrong. Separate list literals are different objects → 'is' is False.",
       "1": "Correct. Values equal, identities differ.",
       "2": "Wrong. Equality is True here.",
       "3": "Wrong. Equality is True."
@@ -2876,11 +2876,11 @@
   },
   {
     "topic": "Strings",
-    "prompt": "What does this print?\n\nprint('\u03c0'.encode('utf-8'))",
+    "prompt": "What does this print?\n\nprint('π'.encode('utf-8'))",
     "options": [
-      "'\u03c0'",
+      "'π'",
       "b'\\xcf\\x80'",
-      "b'\u03c0'",
+      "b'π'",
       "UnicodeError"
     ],
     "correct": [
@@ -2888,9 +2888,9 @@
     ],
     "explanations": {
       "0": "Wrong. encode returns bytes, not str.",
-      "1": "Correct. UTF-8 encodes \u03c0 to the byte sequence \\xcf\\x80.",
+      "1": "Correct. UTF-8 encodes π to the byte sequence \\xcf\\x80.",
       "2": "Wrong. bytes display escapes for non-ASCII.",
-      "3": "Wrong. UTF-8 can encode \u03c0."
+      "3": "Wrong. UTF-8 can encode π."
     }
   },
   {
@@ -4069,6 +4069,563 @@
       "1": "Correct. not has higher precedence than or.",
       "2": "Wrong. Valid expression.",
       "3": "Wrong. Deterministic."
+    }
+  },
+  {
+    "topic": "Data Structures",
+    "prompt": "Which Python 3 construct is best for efficiently extracting only the even numbers from a large dataset?",
+    "options": [
+      "zip(dataset, dataset)",
+      "map(lambda x: x % 2 == 0, dataset)",
+      "functools.reduce(lambda acc, x: acc + ([x] if x % 2 == 0 else []), dataset, [])",
+      "[x for x in dataset if x % 2 == 0]",
+      "filter(lambda x: x % 2 == 0, dataset)"
+    ],
+    "correct": [
+      4
+    ],
+    "explanations": {
+      "0": "Wrong. zip pairs iterables; it doesn't filter values.",
+      "1": "Wrong. map transforms each element; it would produce booleans, not the even numbers.",
+      "2": "Wrong. This is unnecessarily complex and inefficient for filtering.",
+      "3": "Close, and it works, but the question asks which construct is best/most direct for filtering; filter is the dedicated tool here.",
+      "4": "Correct. filter selects elements that satisfy the predicate (even numbers)."
+    }
+  },
+  {
+    "topic": "Data Structures",
+    "prompt": "You have a dict user_settings. Which Python 3 approaches remove the key \"language\" without raising an exception if the key is missing?",
+    "options": [
+      "user_settings.remove(\"language\")",
+      "if \"language\" in user_settings:\n    del user_settings[\"language\"]",
+      "del user_settings[\"language\"]",
+      "user_settings.pop(\"language\", None)",
+      "user_settings.get(\"language\", None)"
+    ],
+    "correct": [
+      1,
+      3
+    ],
+    "explanations": {
+      "0": "Wrong. dict has no remove() method.",
+      "1": "Correct. Checks existence before deleting.",
+      "2": "Wrong. Raises KeyError if the key is missing.",
+      "3": "Correct. pop with a default avoids KeyError and removes the key if present.",
+      "4": "Wrong. get retrieves a value; it does not remove the key."
+    }
+  },
+  {
+    "topic": "Data Structures",
+    "prompt": "Why might a Python developer choose a tuple over a list for immutable configuration data?",
+    "options": [
+      "Tuples typically consume less memory than lists.",
+      "Tuples prevent unintended mutation of configuration values.",
+      "Tuples can be slightly faster to iterate than lists.",
+      "Lists support fixed schema definitions better than tuples.",
+      "Lists provide faster write performance than tuples."
+    ],
+    "correct": [
+      0,
+      1,
+      2
+    ],
+    "explanations": {
+      "0": "Correct. Tuples are generally more memory-efficient than lists for the same contents.",
+      "1": "Correct. Tuples are immutable, so you can't accidentally reassign elements.",
+      "2": "Correct. Iteration over tuples can be marginally faster in CPython.",
+      "3": "Wrong. Both can represent fixed schemas; tuples are often used for fixed records, not lists.",
+      "4": "Wrong. Write performance isn't a reason to prefer tuples for immutable config."
+    }
+  },
+  {
+    "topic": "Iterators",
+    "prompt": "Given:\n\ndef chain(*iterables):\n    for it in iterables:\n        yield from it\n\nWhat does list(chain(\"AB\", \"CD\")) produce?",
+    "options": [
+      "[['A', 'B'], ['C', 'D']]",
+      "['A', 'C', 'B', 'D']",
+      "['AB', 'CD']",
+      "['A', 'B', 'C', 'D']",
+      "[65, 66, 67, 68]"
+    ],
+    "correct": [
+      3
+    ],
+    "explanations": {
+      "0": "Wrong. The generator yields individual characters, not sublists.",
+      "1": "Wrong. chain yields all of the first iterable, then all of the second (not interleaved).",
+      "2": "Wrong. It doesn't yield the original strings; it yields from them character-by-character.",
+      "3": "Correct. Strings are iterable, so yield from produces each character in order.",
+      "4": "Wrong. You'd only see code points like that if you applied ord()."
+    }
+  },
+  {
+    "topic": "Comprehensions",
+    "prompt": "In Python 3, which of the following creates a generator comprehension (generator expression)?",
+    "options": [
+      "[x**2 for x in range(5)]",
+      "{x: x**2 for x in range(5)}",
+      "(x**2 for x in range(5))",
+      "list(x**2 for x in range(5))",
+      "{x**2 for x in range(5)}"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. Square brackets create a list comprehension.",
+      "1": "Wrong. Curly braces with key:value create a dict comprehension.",
+      "2": "Correct. Parentheses around a comprehension create a generator expression.",
+      "3": "Wrong. This evaluates a generator expression into a list.",
+      "4": "Wrong. Curly braces without key:value create a set comprehension."
+    }
+  },
+  {
+    "topic": "Strings",
+    "prompt": "Given:\n\nsentence = \"data science with python\"\nprint(sentence.title())\n\nWhich output is correct?",
+    "options": [
+      "\"Data Science With Python\"",
+      "\"Data science with python\"",
+      "\"DATA SCIENCE WITH PYTHON\"",
+      "\"Data Science with Python\"",
+      "\"Datasciencewithpython\""
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. .title() capitalizes the first letter of each word.",
+      "1": "Wrong. That's the original sentence (lowercase).",
+      "2": "Wrong. That's .upper() behavior.",
+      "3": "Wrong. .title() also capitalizes \"With\" in the middle.",
+      "4": "Wrong. .title() does not remove spaces."
+    }
+  },
+  {
+    "topic": "Operators",
+    "prompt": "A developer wrote:\n\ndiscount = 100 - 20 * 0.1\n\nThey expected a different result due to grouping. Which change fixes the operator-precedence grouping issue?",
+    "options": [
+      "(100 - 20) * 0.1",
+      "(100 - 20) / 0.1",
+      "100 - 20 / 0.1",
+      "100 / (20 * 0.1)",
+      "100 - (20 * 0.1)"
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. Parentheses force subtraction first, then multiplication.",
+      "1": "Wrong. This changes the operation to division and produces a very different value.",
+      "2": "Wrong. This changes the grouping and produces a different (also likely unintended) value.",
+      "3": "Wrong. This computes a ratio, not a discounted amount.",
+      "4": "Wrong. This is equivalent to the original expression (multiplication already happens before subtraction)."
+    }
+  },
+  {
+    "topic": "Control Flow",
+    "prompt": "Consider:\n\nfor item in shipments:\n    if not item[\"barcode\"]:\n        log_warning(\"Unreadable barcode\")\n        continue\n    if item[\"barcode\"].startswith(\"CRIT\") and item[\"timestamp\"] > item[\"deadline\"]:\n        halt_batch()\n        break\n    process_item(item)\nelse:\n    finalize_batch()\n\nUnder which condition will finalize_batch() execute in Python 3?",
+    "options": [
+      "Only when no items are processed.",
+      "If halt_batch() is called.",
+      "All barcodes must be valid and critical items are on time.",
+      "The first item must be non-critical.",
+      "At least one item must fail the timestamp check."
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. The for-else runs based on whether the loop breaks, not on whether items were processed.",
+      "1": "Wrong. If halt_batch() is called, the loop breaks and the else does not run.",
+      "2": "Correct. The else runs only if the loop completes without hitting break (i.e., no late critical shipment).",
+      "3": "Wrong. The first item doesn't determine whether the loop breaks overall.",
+      "4": "Wrong. Failing the timestamp check for a CRIT item triggers break, which prevents the else."
+    }
+  },
+  {
+    "topic": "Math",
+    "prompt": "A data analyst wrote:\n\nweights = [0.2, 0.3, 0.5]\nscores  = [80, 90, 100]\nprint(sum(w * s for w, s in zip(weights, scores)) / len(scores))\n\nWhy does this produce the wrong weighted result?",
+    "options": [
+      "The average is divided by len(scores) when a weighted sum should not be averaged that way.",
+      "Python 3 evaluates multiplication before addition.",
+      "Parentheses around multiplication are required.",
+      "Division has higher precedence than multiplication.",
+      "sum() has lower precedence than division."
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. With weights summing to 1, the weighted result is sum(w*s). Dividing by len(scores) shrinks it incorrectly.",
+      "1": "Wrong. Multiplication-before-addition is correct and not the problem here.",
+      "2": "Wrong. The multiplication is already grouped correctly inside the generator expression.",
+      "3": "Wrong. Multiplication and division have the same precedence and associate left-to-right; precedence isn't the issue.",
+      "4": "Wrong. sum(...) is a function call; the issue is the chosen denominator, not precedence."
+    }
+  },
+  {
+    "topic": "Dictionaries",
+    "prompt": "You track HTTP status code counts in a dict error_counts.\nRequirements:\n- Increment count if the code exists\n- Initialize to 1 if first seen\n- Avoid exceptions if key is missing\n\nWhich snippets meet these requirements using only standard Python?",
+    "options": [
+      "if error_counts[code]:\n    error_counts[code] += 1\nelse:\n    error_counts[code] = 1",
+      "error_counts[code] = error_counts.pop(code, 0) + 1",
+      "error_counts.setdefault(code, 0)\nerror_counts[code] += 1",
+      "error_counts[code] = 1 if code not in error_counts else error_counts[code] + 1",
+      "error_counts[code] += 1 if code in error_counts else 1"
+    ],
+    "correct": [
+      1,
+      2,
+      3
+    ],
+    "explanations": {
+      "0": "Wrong. error_counts[code] raises KeyError if code is not present.",
+      "1": "Correct. pop with a default avoids KeyError, then assigns incremented value back.",
+      "2": "Correct. setdefault ensures the key exists with 0, then increments.",
+      "3": "Correct. Explicit membership check avoids KeyError and sets to 1 on first occurrence.",
+      "4": "Wrong. The else branch produces 1 but does not assign it back to error_counts[code]."
+    }
+  },
+  {
+    "topic": "Concurrency",
+    "prompt": "Which statement correctly describes the Global Interpreter Lock (GIL) in CPython?",
+    "options": [
+      "It prevents all threads from executing any Python code.",
+      "It locks files to avoid race conditions.",
+      "It prevents processes from sharing memory.",
+      "It ensures that only one thread executes Python bytecode at a time.",
+      "It is automatically disabled in Python 3."
+    ],
+    "correct": [
+      3
+    ],
+    "explanations": {
+      "0": "Wrong. Threads can run, but they contend for the GIL when executing bytecode.",
+      "1": "Wrong. The GIL is not a file lock.",
+      "2": "Wrong. Processes are separate OS processes; the GIL is about threads within a process.",
+      "3": "Correct. In CPython, the GIL allows only one thread to execute Python bytecode at once.",
+      "4": "Wrong. The GIL still exists in CPython in Python 3."
+    }
+  },
+  {
+    "topic": "Formatting",
+    "prompt": "A report must align currency values to two decimal places. Which Python 3 format option should be used?",
+    "options": [
+      "\"%.02s\" % value",
+      "repr(value)",
+      "\"${:.02s}\".format(value)",
+      "f\"${value:.2f}\"",
+      "str(value)"
+    ],
+    "correct": [
+      3
+    ],
+    "explanations": {
+      "0": "Wrong. %s formats as a string and .02 is width, not decimal precision for numbers.",
+      "1": "Wrong. repr() is for debugging representations, not currency formatting.",
+      "2": "Wrong. .02s is string precision, not numeric decimal places.",
+      "3": "Correct. .2f formats a float to two decimal places (fixed-point).",
+      "4": "Wrong. str() does not guarantee two decimal places."
+    }
+  },
+  {
+    "topic": "OOP",
+    "prompt": "Given:\n\nclass Vehicle:\n    def move(self): return \"Moving\"\n\nclass Flyable:\n    def move(self): return \"Flying\"\n\nclass Drone(Vehicle, Flyable):\n    pass\n\nprint(Drone().move())\n\nWhat is printed?",
+    "options": [
+      "Depends on the runtime inputs.",
+      "Moving",
+      "Error: Conflict",
+      "None",
+      "Flying"
+    ],
+    "correct": [
+      1
+    ],
+    "explanations": {
+      "0": "Wrong. Method resolution order (MRO) is deterministic.",
+      "1": "Correct. Drone uses Vehicle first in the base class list, so Vehicle.move is chosen.",
+      "2": "Wrong. This is valid; MRO resolves the method.",
+      "3": "Wrong. move returns a string, not None.",
+      "4": "Wrong. Flyable.move would be used only if Vehicle didn't define move (or ordering changed)."
+    }
+  },
+  {
+    "topic": "Exceptions",
+    "prompt": "user_input = \"45x\"\n\nWhich approaches correctly handle invalid input when converting to int?",
+    "options": [
+      "balance = 0",
+      "try:\n    balance = int(user_input)\nexcept TypeError:\n    balance = 0",
+      "balance = int(user_input) if user_input.isdigit() else 0",
+      "try:\n    balance = int(user_input)\nexcept ValueError:\n    balance = 0",
+      "balance = int(user_input)"
+    ],
+    "correct": [
+      2,
+      3
+    ],
+    "explanations": {
+      "0": "Wrong. This doesn't attempt conversion; it just assigns 0.",
+      "1": "Wrong. int(\"45x\") raises ValueError, not TypeError.",
+      "2": "Correct. isdigit() guards the conversion (\"45x\" is not digits).",
+      "3": "Correct. Catching ValueError handles invalid numeric strings.",
+      "4": "Wrong. This raises ValueError for \"45x\"."
+    }
+  },
+  {
+    "topic": "Functional Programming",
+    "prompt": "A retail company stores product sales as a list of numbers. Which use of functools.reduce correctly computes the total (sum)?",
+    "options": [
+      "reduce(sales, lambda a, b: a + b)",
+      "reduce(lambda x: sum(x), sales)",
+      "reduce(lambda a, b: a + b, sales)",
+      "reduce(sum, sales)",
+      "reduce(lambda a, b: a * b, sales)"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. reduce expects the function first, then the iterable.",
+      "1": "Wrong. The reducer function must take two arguments (accumulator, next).",
+      "2": "Correct. This reduces by repeatedly adding elements.",
+      "3": "Wrong. sum() expects an iterable; reduce passes two scalars.",
+      "4": "Wrong. This multiplies values (product), not sum."
+    }
+  },
+  {
+    "topic": "OOP",
+    "prompt": "A BankAccount class must provide an audit method that does not depend on instance-level data but logically belongs to the class. Which techniques support this goal in Python 3?",
+    "options": [
+      "Use a lambda function assigned to the class.",
+      "Define audit_transaction as a regular method using self.",
+      "Define audit_transaction as a static method.",
+      "Define audit_transaction as a class method using @classmethod.",
+      "Define audit_transaction as a private method with __audit_transaction."
+    ],
+    "correct": [
+      2,
+      3
+    ],
+    "explanations": {
+      "0": "Wrong. You can do it, but it's not the intended/idiomatic approach for a class-level API.",
+      "1": "Wrong. self implies instance-level behavior/state.",
+      "2": "Correct. @staticmethod attaches behavior to the class without needing self/cls.",
+      "3": "Correct. @classmethod receives cls, which is useful for class-wide behavior or alternate constructors.",
+      "4": "Wrong. Name-mangling changes accessibility, not instance vs class dependence."
+    }
+  },
+  {
+    "topic": "Files & JSON",
+    "prompt": "A Python 3 API logging system writes event data to JSON using UTF-8. Which statement correctly opens the file to work with json.dump() and avoid cross-platform encoding issues?",
+    "options": [
+      "import json\nwith open(\"log.json\", \"a\", encoding=\"utf-16\") as f:\n    json.dump(data, f)",
+      "with open(\"log.json\", \"w\", encoding=\"utf-8\") as f:\n    f.write(json.dumps(data))",
+      "import json\nwith open(\"log.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(data, f, ensure_ascii=False)",
+      "import json\nwith open(\"log.json\", \"w\") as f:\n    json.dump(data, f)",
+      "with open(\"log.json\", \"wb\") as f:\n    json.dump(data, f)"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. UTF-16 is not the requested encoding and can cause compatibility issues.",
+      "1": "Not ideal. It uses json.dumps + write; it can work, but the requirement calls for json.dump() usage.",
+      "2": "Correct. Explicit UTF-8 plus json.dump() (and ensure_ascii=False to preserve Unicode) meets the requirement.",
+      "3": "Risky. Omitting encoding uses a platform default that may not be UTF-8.",
+      "4": "Wrong. json.dump writes text; the file is opened in binary mode."
+    }
+  },
+  {
+    "topic": "Regex",
+    "prompt": "You need to match ticket references like INC-1234 or REQ-4567 while excluding malformed entries like REQ123 or INC--0001. Which regex works?",
+    "options": [
+      "r\"(INC|REQ)\\d+\"",
+      "r\"[A-Z]{3,}-\\d+\"",
+      "r\"(INC|REQ)-\\d+\"",
+      "r\"INC|REQ-\\d+\"",
+      "r\"(INC|REQ)-\\d{4}\""
+    ],
+    "correct": [
+      4
+    ],
+    "explanations": {
+      "0": "Wrong. Missing the required hyphen.",
+      "1": "Too broad. It matches many 3+ letter prefixes, not just INC/REQ.",
+      "2": "Works for INC/REQ with a hyphen and digits of any length, but the examples specify a 4-digit ID.",
+      "3": "Wrong. Due to precedence, it matches 'INC' anywhere or 'REQ-<digits>'.",
+      "4": "Correct. Requires INC or REQ, a single hyphen, and exactly 4 digits."
+    }
+  },
+  {
+    "topic": "Control Flow",
+    "prompt": "An HR tool should stop scanning candidates once a fully qualified candidate is found, but continue is used instead of break:\n\nfor c in candidates:\n    if c[\"degree\"] == \"PhD\" and c[\"experience\"] > 5:\n        continue\n    print(f\"Evaluating {c['name']}\")\n\nWhat problems can this cause?",
+    "options": [
+      "Breaks after evaluating the first candidate.",
+      "Enters an infinite loop due to continue.",
+      "Raises an exception when iterating over candidates.",
+      "Evaluates all candidates regardless of credentials.",
+      "Skips evaluation of PhD candidates even when qualified."
+    ],
+    "correct": [
+      3,
+      4
+    ],
+    "explanations": {
+      "0": "Wrong. There is no break at all.",
+      "1": "Wrong. continue does not create an infinite loop in a for-loop.",
+      "2": "Wrong. The code shown iterates normally.",
+      "3": "Correct. Without break, the loop continues scanning everyone.",
+      "4": "Correct. The qualified PhD candidate is skipped instead of triggering a stop."
+    }
+  },
+  {
+    "topic": "Imports",
+    "prompt": "A service dynamically imports regional settings:\n\nimport importlib\n\ndef load_settings(region_code):\n    return importlib.import_module(f\"settings.{region_code}\")\n\nA typo renamed settings.us.py to setting.us.py, causing ModuleNotFoundError. What must be done to resolve it?",
+    "options": [
+      "Rename the file to match the expected fully qualified module path structure.",
+      "Ensure the settings modules are listed in sys.modules prior to import.",
+      "Refactor the service to use hardcoded if-else imports for each region.",
+      "Rebuild the Python interpreter cache using py_compile.",
+      "Add the missing module path to the system PATH environment variable."
+    ],
+    "correct": [
+      0
+    ],
+    "explanations": {
+      "0": "Correct. The module name must match the package/module path expected by importlib.import_module.",
+      "1": "Wrong. sys.modules is populated after imports; you don't pre-populate it to fix missing files.",
+      "2": "Unnecessary. Dynamic import is fine; the issue is the filename/module name mismatch.",
+      "3": "Wrong. Bytecode cache is not the cause of ModuleNotFoundError here.",
+      "4": "Wrong. Python import paths are controlled by sys.path/PYTHONPATH, not the OS PATH for executables."
+    }
+  },
+  {
+    "topic": "Async",
+    "prompt": "Why might a coroutine using async for be chosen over a plain generator in a high-throughput pipeline?",
+    "options": [
+      "Coroutines automatically parallelize CPU-bound code.",
+      "Generators cannot handle exceptions.",
+      "Coroutines can yield values without memory allocation.",
+      "Coroutines store all results in memory before returning.",
+      "Coroutines allow non-blocking I/O, improving throughput."
+    ],
+    "correct": [
+      4
+    ],
+    "explanations": {
+      "0": "Wrong. async/await improves I/O concurrency, not CPU parallelism.",
+      "1": "Wrong. Generators can handle exceptions (throw, try/except inside).",
+      "2": "Wrong. Both generators and async generators stream values; memory allocation is not the key distinction.",
+      "3": "Wrong. Coroutines/async generators can stream results; they do not inherently store all results.",
+      "4": "Correct. async for works with async iterators, enabling non-blocking I/O and better throughput."
+    }
+  },
+  {
+    "topic": "Encapsulation",
+    "prompt": "A bank wants every update to an account balance to be validated (must stay ≥ 0) and logged. Which snippet fits this requirement best?",
+    "options": [
+      "def log_balance(self, val): self.__balance = val",
+      "self.balance = abs(value)",
+      "balance = property(lambda self: self.__balance)",
+      "@property\ndef balance(self):\n    return self.__balance\n\n@balance.setter\ndef balance(self, value):\n    if value < 0:\n        raise ValueError(\"Insufficient funds\")\n    print(f\"Balance updated to {value}\")\n    self.__balance = value",
+      "def set_balance(self, value):\n    self.__balance = value\n    print(\"Updated\")"
+    ],
+    "correct": [
+      3
+    ],
+    "explanations": {
+      "0": "Wrong. No validation or logging beyond assignment.",
+      "1": "Wrong. It forces non-negative values but doesn't validate business rules or log consistently.",
+      "2": "Wrong. Read-only property; it doesn't control updates/validation.",
+      "3": "Correct. The setter validates and logs every update before assigning.",
+      "4": "Wrong. Logs but does not validate the value."
+    }
+  },
+  {
+    "topic": "Strings",
+    "prompt": "records = [\" Luffy , 30 \", \"Ace,20\", \" Sabo , 22 \"]\n\nDesired result: [\"Luffy,30\", \"Ace,20\", \"Sabo,22\"]. Which comprehension achieves this?",
+    "options": [
+      "[r.rstrip() for r in records]",
+      "[r.strip() for r in records]",
+      "[\",\".join(p.strip() for p in r.split(\",\")) for r in records]",
+      "[r.lstrip() for r in records]",
+      "[r.replace(\" \", \"\") for r in records]"
+    ],
+    "correct": [
+      2
+    ],
+    "explanations": {
+      "0": "Wrong. rstrip removes only trailing whitespace; leading/internal whitespace remains.",
+      "1": "Wrong. strip removes outer whitespace but keeps spaces around the comma inside the string.",
+      "2": "Correct. Split on commas, strip each field, then re-join with commas.",
+      "3": "Wrong. lstrip removes only leading whitespace.",
+      "4": "Too aggressive. It removes all spaces, including spaces that might be meaningful in names/fields."
+    }
+  },
+  {
+    "topic": "Functions as Objects",
+    "prompt": "A platform wants to compute final grades using interchangeable strategies (average, weighted, drop-lowest). Which patterns enable passing strategy functions as first-class objects?",
+    "options": [
+      "def calculate(*args, **kwargs):\n    return sum(args)",
+      "def calculate(scores):\n    return strategy(scores)",
+      "def calculate(scores, strategy):\n    return strategy(scores)",
+      "def calculate(scores: list, strategy: callable) -> float:\n    return strategy(scores)",
+      "strategy = lambda scores: sum(scores) / len(scores)\ncalculate([85, 90, 95], strategy)"
+    ],
+    "correct": [
+      2,
+      3,
+      4
+    ],
+    "explanations": {
+      "0": "Wrong. This doesn't accept a strategy function parameter.",
+      "1": "Wrong. strategy is not passed in; it's an undeclared free variable in this snippet.",
+      "2": "Correct. Accepts a function argument and calls it.",
+      "3": "Correct. Same idea, with type hints indicating a callable strategy.",
+      "4": "Correct. Demonstrates assigning a function (lambda) to a variable and passing it to calculate()."
+    }
+  },
+  {
+    "topic": "Comprehensions",
+    "prompt": "rows = [\"name,age\", \"Luffy,19\", \"Ace,20\"]\n\nWhich comprehension builds a list of dicts like [{\"name\":\"Luffy\",\"age\":\"19\"}, {\"name\":\"Ace\",\"age\":\"20\"}]?",
+    "options": [
+      "{dict(zip(rows[0], row)) for row in rows[1:]}",
+      "[zip(rows[0].split(\",\"), row.split(\",\")) for row in rows[1:]]",
+      "[dict((rows[0].split(\",\"), row.split(\",\"))) for row in rows[1:]]",
+      "dict(zip(rows[0].split(\",\"), row.split(\",\")))",
+      "[dict(zip(rows[0].split(\",\"), row.split(\",\"))) for row in rows[1:]]"
+    ],
+    "correct": [
+      4
+    ],
+    "explanations": {
+      "0": "Wrong. Uses a set comprehension and zips characters from the header string (not split fields).",
+      "1": "Wrong. Produces zip objects (iterators), not dicts.",
+      "2": "Wrong. dict() expects an iterable of key/value pairs; passing two lists as one tuple is invalid.",
+      "3": "Wrong. Not a comprehension, and 'row' is undefined.",
+      "4": "Correct. Splits header into keys and each row into values, zips them, and converts to dict for each row."
+    }
+  },
+  {
+    "topic": "Data Structures",
+    "prompt": "archived_doc = ([341, 342, 343], \"sealed\")\n\nA tuple stores a mutable list of page IDs plus an immutable status string. Which statements are correct?",
+    "options": [
+      "The tuple structure prevents any changes, including changes to its internal list.",
+      "Tuples containing mutable types like lists are invalid and should be avoided.",
+      "Updating any element of the tuple (e.g., replacing the list or the status) requires creating a new tuple.",
+      "Attempting to modify the list of page IDs raises a TypeError because it is part of a tuple.",
+      "The list of page IDs can be modified in-place even though it resides within an immutable tuple."
+    ],
+    "correct": [
+      2,
+      4
+    ],
+    "explanations": {
+      "0": "Wrong. The tuple is immutable, but it can contain mutable objects that can be changed in-place.",
+      "1": "Wrong. This is allowed; you just need to understand the mutability implications.",
+      "2": "Correct. You can't rebind tuple slots; to replace an element you must make a new tuple.",
+      "3": "Wrong. Modifying the list itself is allowed; only rebinding the tuple element is disallowed.",
+      "4": "Correct. The inner list is mutable and can be changed in-place."
     }
   }
 ]

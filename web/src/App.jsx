@@ -1,4 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+
 
 const TOTAL_QUESTIONS = 54
 const TIME_LIMIT_SECONDS = 135 * 60
@@ -9,6 +12,9 @@ const DONATE = {
   coffee: "https://www.buymeacoffee.com/larrychiem",
 }
 const LS_SEEN = "ppe_seen_v1";
+const LS_QUEUE = "ppe_queue_v1";
+const LS_QUEUE_POS = "ppe_queue_pos_v1";
+
 
 function loadSeenSet() {
   try {
@@ -23,9 +29,42 @@ function saveSeenSet(set) {
   localStorage.setItem(LS_SEEN, JSON.stringify([...set]));
 }
 
+// crude but effective “is this code?” check
+function looksLikeCode(text) {
+  return (
+    text.includes("\n") &&
+    (text.includes("def ") ||
+      text.includes("class ") ||
+      text.includes("for ") ||
+      text.includes("if ") ||
+      text.includes("import ") ||
+      text.includes("return ") ||
+      text.includes("print("))
+  );
+}
 
-const LS_QUEUE = "ppe_queue_v1";
-const LS_QUEUE_POS = "ppe_queue_pos_v1";
+export function PromptText({ text }) {
+  if (looksLikeCode(text)) {
+    return (
+      <SyntaxHighlighter
+        language="python"
+        style={oneLight}
+        customStyle={{
+          margin: 0,
+          borderRadius: 12,
+          padding: 16,
+          fontSize: 14,
+          lineHeight: 1.5,
+        }}
+      >
+        {text}
+      </SyntaxHighlighter>
+    );
+  }
+
+  // normal paragraph text (keeps your newlines)
+  return <div style={{ whiteSpace: "pre-wrap" }}>{text}</div>;
+}
 
 function loadQueue() {
   try {
@@ -639,7 +678,9 @@ const q = exam[idx]
               <span className="pill">Score: {correctCount}/{attempted}</span>
             </div>
 
-            <pre className="prompt">{q.prompt}</pre>
+            <pre className="prompt">
+                <PromptText text={q.prompt} />
+            </pre>
 
             <div className="opts">
               {q.options.map((opt, oi) => {
@@ -659,7 +700,9 @@ const q = exam[idx]
                     disabled={locked || timeLeft <= 0}
                   >
                     <span className="letter">{LETTERS[oi]}</span>
-                    <span className="optText">{opt}</span>
+                    <span className="optText">
+                        <PromptText text={opt} />
+                    </span>
                   </button>
                 )
               })}

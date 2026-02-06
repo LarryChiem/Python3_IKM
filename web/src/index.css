@@ -22,7 +22,7 @@ h1{font-size:22px;margin:0}
 .btn.ghost{background:#fff;color:#111;border:1px solid #e5e7eb}
 .hint{color:#4b5563;margin-top:10px}
 .muted{color:#6b7280}
-.mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace}
+.mono{white-space:pre-wrap;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace}
 .start{display:flex;flex-direction:column;gap:14px}
 .history{border-top:1px solid #eee;padding-top:14px}
 .historyHead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -38,7 +38,7 @@ h1{font-size:22px;margin:0}
 .opt.chosen{border-color:#111}
 .opt.correct{border-color:#16a34a}
 .opt.wrong{border-color:#dc2626}
-.optText{flex:1}
+.optText{flex:1;white-space:pre-wrap;}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
 .explain{margin-top:6px;border-top:1px solid #eee;padding-top:12px}
 .exRow{padding:10px 0;border-top:1px dashed #eee}
