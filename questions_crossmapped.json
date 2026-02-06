@@ -16,7 +16,8 @@
       "1": "Correct. 3/2 evaluates to 1.5 (float).",
       "2": "Wrong. Decimal is only used if explicitly created.",
       "3": "Wrong. No exception is raised."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -35,7 +36,8 @@
       "1": "Wrong. '==' checks value equality.",
       "2": "Correct. Value vs identity is the key distinction.",
       "3": "Wrong. They are not interchangeable."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Numerics",
@@ -54,7 +56,8 @@
       "1": "Correct. 0.1+0.2 is not exactly 0.3 in binary floating point.",
       "2": "Wrong. No exception is raised.",
       "3": "Wrong. This behavior is consistent across platforms."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Truthiness",
@@ -75,7 +78,8 @@
       "1": "Correct. Empty string is falsy.",
       "2": "Correct. Empty list is falsy.",
       "3": "Wrong. Non-empty strings are truthy even if they look like zero."
-    }
+    },
+    "ikm_pdf_mapping": "Python Control Flow"
   },
   {
     "topic": "Truthiness",
@@ -94,7 +98,8 @@
       "1": "Wrong. The list is not empty.",
       "2": "Wrong. bool(list) is valid.",
       "3": "Wrong. bool returns True/False."
-    }
+    },
+    "ikm_pdf_mapping": "Python Control Flow"
   },
   {
     "topic": "Data Structures",
@@ -114,7 +119,8 @@
       "1": "Wrong. Lists are mutable \u2192 unhashable.",
       "2": "Wrong. Dicts are mutable \u2192 unhashable.",
       "3": "Correct. Integers are hashable."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "References",
@@ -133,7 +139,8 @@
       "1": "Correct. Both variables point to the same list object.",
       "2": "Wrong. append mutates the list; it doesn\u2019t replace it with [4].",
       "3": "Wrong. No variable is missing."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "References",
@@ -152,7 +159,8 @@
       "1": "Correct. Slicing creates a shallow copy of the list.",
       "2": "Wrong. The copy contains elements.",
       "3": "Wrong. This is valid Python."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "Sequences",
@@ -171,7 +179,8 @@
       "1": "Correct. (1) is just the integer 1.",
       "2": "Wrong. Lists use square brackets.",
       "3": "Wrong. No float conversion occurs."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "Sequences",
@@ -190,7 +199,8 @@
       "1": "Wrong. (1,) is not an int.",
       "2": "Wrong. Not a list.",
       "3": "Wrong. Not a float."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "Generators",
@@ -210,7 +220,8 @@
       "1": "Wrong. List comprehension creates a list.",
       "2": "Correct. 'yield' makes a generator function.",
       "3": "Wrong. Set comprehension creates a set."
-    }
+    },
+    "ikm_pdf_mapping": "Python Generators and Coroutines"
   },
   {
     "topic": "Generators",
@@ -229,7 +240,8 @@
       "1": "Wrong. Generators do not restart on their own.",
       "2": "Correct. Iteration ends via StopIteration.",
       "3": "Wrong. It terminates."
-    }
+    },
+    "ikm_pdf_mapping": "Python Generators and Coroutines"
   },
   {
     "topic": "Sets",
@@ -248,7 +260,8 @@
       "1": "Correct. The set is {1,2,3}.",
       "2": "Wrong. There are three unique elements.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "Pitfalls",
@@ -267,7 +280,8 @@
       "1": "Wrong. It becomes a list of length 2, not a nested repetition conceptually.",
       "2": "Correct. List multiplication repeats references to the same object.",
       "3": "Wrong. No error."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Functions",
@@ -286,7 +300,8 @@
       "1": "Correct. This is why mutable defaults can be dangerous.",
       "2": "Wrong. They persist across calls.",
       "3": "Wrong. They can be mutable; it\u2019s just often a pitfall."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Functions",
@@ -305,7 +320,8 @@
       "1": "Correct. The default list is reused and grows.",
       "2": "Wrong. It doesn\u2019t reset automatically.",
       "3": "Wrong. Valid code."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Scope",
@@ -324,7 +340,8 @@
       "1": "Correct. The global x stays 10.",
       "2": "Wrong. No read-before-assign occurs here.",
       "3": "Wrong. x exists globally."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Scope",
@@ -343,7 +360,8 @@
       "1": "Wrong. It fails before printing.",
       "2": "Correct. Local variable referenced before assignment.",
       "3": "Wrong. Name exists, but scope rules make it local."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Scope",
@@ -362,7 +380,8 @@
       "1": "Correct. nonlocal targets nearest enclosing function scope.",
       "2": "Wrong. Not a Python keyword.",
       "3": "Wrong. Not a Python keyword."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Strings",
@@ -381,7 +400,8 @@
       "1": "Correct. 'B' has a smaller code point than 'a'.",
       "2": "Wrong. String comparisons are valid.",
       "3": "Wrong. Python uses Unicode code points, not locale."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -400,7 +420,8 @@
       "1": "Correct. Comma-separated string.",
       "2": "Wrong. That would be repr of a list, not join output.",
       "3": "Wrong. join works with strings."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings/Bytes",
@@ -419,7 +440,8 @@
       "1": "Correct. decode converts bytes -> str.",
       "2": "Wrong. str(b) produces a representation like \"b'...'\".",
       "3": "Wrong. bytes(b) expects an int iterable or buffer; not decoding."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -438,7 +460,8 @@
       "1": "Wrong. That would be 'hello'[1:4].",
       "2": "Wrong. That would be 'hello'[2:5].",
       "3": "Wrong. Slicing is safe; no IndexError."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Sequences",
@@ -458,7 +481,8 @@
       "1": "Wrong. It\u2019s a shallow copy; nested objects are shared.",
       "2": "Correct. list[start:stop:step] supports step.",
       "3": "Wrong. Python list slicing is not a view (unlike some libraries)."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "Sequences",
@@ -477,7 +501,8 @@
       "1": "Correct. The slice [2] is replaced by [9,9].",
       "2": "Wrong. That would replace the whole list.",
       "3": "Wrong. Slice assignment is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "Sorting",
@@ -496,7 +521,8 @@
       "1": "Correct. Lexicographic string order: '10' < '1' < '2' is false; actual is '10','1','2'.",
       "2": "Wrong. That\u2019s the original order, not sorted.",
       "3": "Wrong. Sorting strings is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "Sorting",
@@ -515,7 +541,8 @@
       "1": "Wrong. abs(nums) is invalid for a list.",
       "2": "Wrong. list.sort takes keyword key=..., not a positional function like that.",
       "3": "Wrong. sort(...) is not a built-in function in that form."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "Stdlib",
@@ -534,7 +561,8 @@
       "1": "Wrong. It includes items too.",
       "2": "Correct. enumerate yields (index, value) pairs.",
       "3": "Wrong. No length is included."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -553,7 +581,8 @@
       "1": "Wrong. zip does not pad with None by default.",
       "2": "Wrong. This is valid.",
       "3": "Wrong. 'c' is not present."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Dicts",
@@ -572,7 +601,8 @@
       "1": "Wrong. It returns default if provided.",
       "2": "Correct. Default is returned when key is missing.",
       "3": "Wrong. get does not mutate the dict."
-    }
+    },
+    "ikm_pdf_mapping": "Python Dictionaries"
   },
   {
     "topic": "Dicts",
@@ -591,7 +621,8 @@
       "1": "Wrong. It will insert 'b' and return 2.",
       "2": "Wrong. It does not raise KeyError.",
       "3": "Wrong. It mutates the dict by adding 'b'."
-    }
+    },
+    "ikm_pdf_mapping": "Python Dictionaries"
   },
   {
     "topic": "Stdlib",
@@ -610,7 +641,8 @@
       "1": "Correct. The json module handles JSON encoding/decoding.",
       "2": "Wrong. marshal is low-level and not for JSON interchange.",
       "3": "Wrong. csv is for delimited text tables."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -629,7 +661,8 @@
       "1": "Wrong. 10+1+2+3 is not 13.",
       "2": "Correct. sum(iterable, start) starts from 10 \u2192 16.",
       "3": "Wrong. This usage is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -648,7 +681,8 @@
       "1": "Wrong. There is a truthy element.",
       "2": "Wrong. This is valid input.",
       "3": "Wrong. any returns True/False."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -667,7 +701,8 @@
       "1": "Correct. all() requires all elements truthy; [] is falsy.",
       "2": "Wrong. This is valid.",
       "3": "Wrong. all evaluates deterministically."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Exceptions",
@@ -686,7 +721,8 @@
       "1": "Correct. try/else executes else when no exception occurs.",
       "2": "Wrong. else is conditional on no exception.",
       "3": "Wrong. finally has a different role."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Exceptions",
@@ -705,7 +741,8 @@
       "1": "Correct. finally runs, then the exception propagates.",
       "2": "Wrong. finally prints before propagation.",
       "3": "Wrong. Syntax is valid."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Exceptions",
@@ -724,7 +761,8 @@
       "1": "Correct. It re-raises the active exception.",
       "2": "Wrong. It doesn't raise None.",
       "3": "Wrong. It does the opposite of suppressing."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "IO",
@@ -743,7 +781,8 @@
       "1": "Wrong. You still read explicitly.",
       "2": "Correct. Context manager closes file on exit.",
       "3": "Wrong. Exceptions can still occur."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python File I/O"
   },
   {
     "topic": "IO",
@@ -762,7 +801,8 @@
       "1": "Wrong. 'w' truncates and writes.",
       "2": "Correct. 'a' appends to the end.",
       "3": "Wrong. 'rb' is read-binary."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python File I/O"
   },
   {
     "topic": "OOP",
@@ -781,7 +821,8 @@
       "1": "Wrong. That\u2019s @classmethod.",
       "2": "Correct. staticmethod has no implicit self/cls.",
       "3": "Wrong. Python has no true private methods via decorator."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "OOP",
@@ -800,7 +841,8 @@
       "1": "Correct. cls is the class object.",
       "2": "Wrong. It receives only cls implicitly.",
       "3": "Wrong. It does receive cls."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "OOP",
@@ -819,7 +861,8 @@
       "1": "Wrong. It includes A's result too.",
       "2": "Correct. super().f() returns 'A', then + 'B' \u2192 'AB'.",
       "3": "Wrong. Order is A then B."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "OOP",
@@ -838,7 +881,8 @@
       "1": "Correct. Python uses __len__ when __bool__ is absent.",
       "2": "Wrong. __len__ returning int is valid.",
       "3": "Wrong. __len__ also affects truthiness."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "OOP",
@@ -857,7 +901,8 @@
       "1": "Wrong. __getattr__ handles missing attributes.",
       "2": "Wrong. __index__ is for converting an object to an integer index.",
       "3": "Wrong. __slice__ is not used like this in modern Python."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "Functional",
@@ -876,7 +921,8 @@
       "1": "Wrong. That would be identity function behavior.",
       "2": "Wrong. list(...) forces evaluation; without list it would show a map object.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Functional",
@@ -895,7 +941,8 @@
       "1": "Correct. 0 and '' are falsy; 1 and 'a' remain.",
       "2": "Wrong. 1 is also truthy so it remains too.",
       "3": "Wrong. This is valid usage."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Dicts",
@@ -914,7 +961,8 @@
       "1": "Wrong. Iteration does not yield values inline.",
       "2": "Wrong. That would be list(x.items()).",
       "3": "Wrong. list(dict) is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Dictionaries"
   },
   {
     "topic": "Concurrency",
@@ -933,7 +981,8 @@
       "1": "Correct. CPU-bound threads won\u2019t run Python bytecode in true parallel. (GIL) is a mutex that ensures only one thread executes Python bytecode at a time in CPython, the standard Python implementation.",
       "2": "Wrong. multiprocessing uses separate processes and can use multiple cores.",
       "3": "Wrong. asyncio is cooperative and works fine."
-    }
+    },
+    "ikm_pdf_mapping": "Python Concurrency"
   },
   {
     "topic": "Concurrency",
@@ -952,7 +1001,8 @@
       "1": "Correct. await works with awaitables.",
       "2": "Wrong. Generators are not awaitables unless wrapped/converted.",
       "3": "Wrong. Threads are not awaitables by default."
-    }
+    },
+    "ikm_pdf_mapping": "Python Concurrency"
   },
   {
     "topic": "Typing",
@@ -971,7 +1021,8 @@
       "1": "Correct. Optional[int] == Union[int, None].",
       "2": "Wrong. That would be Any.",
       "3": "Wrong. Optional is the opposite of required-only."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Strings",
@@ -990,7 +1041,8 @@
       "1": "Correct. Strings are immutable; item assignment raises TypeError.",
       "2": "Wrong. Index 0 is valid; immutability is the issue.",
       "3": "Wrong. The exception is caught and printed."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "References",
@@ -1009,7 +1061,8 @@
       "1": "Correct. Values equal, identities differ.",
       "2": "Wrong. Equality is True here.",
       "3": "Wrong. Equality is True."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "Dicts",
@@ -1028,7 +1081,8 @@
       "1": "Correct. Dict membership tests keys.",
       "2": "Wrong. It's valid.",
       "3": "Wrong. Meaning is deterministic; hash seed doesn't change correctness."
-    }
+    },
+    "ikm_pdf_mapping": "Python Dictionaries"
   },
   {
     "topic": "Decorators",
@@ -1047,7 +1101,8 @@
       "1": "Correct. wrapper calls f() (10) then adds 1.",
       "2": "Wrong. All operations are valid.",
       "3": "Wrong. It prints the return value, not the function object."
-    }
+    },
+    "ikm_pdf_mapping": "Python Formatting and Decorators"
   },
   {
     "topic": "Closures",
@@ -1066,7 +1121,8 @@
       "1": "Correct. i ends at 2, so all lambdas return 2.",
       "2": "Wrong. range(3) ends with i == 2.",
       "3": "Wrong. i exists in the enclosing scope at call time."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Closures",
@@ -1085,7 +1141,8 @@
       "1": "Wrong. global doesn't capture per-iteration values.",
       "2": "Wrong. Type conversion doesn't address binding.",
       "3": "Wrong. nonlocal is for assigning into enclosing scopes, not capturing loop values."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Context Managers",
@@ -1104,7 +1161,8 @@
       "1": "Wrong. It continues to print 'after' because exception is suppressed.",
       "2": "Wrong. Exception is suppressed due to return True in __exit__.",
       "3": "Wrong. The body prints x before the exception occurs."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python File I/O"
   },
   {
     "topic": "Iteration Protocol",
@@ -1123,7 +1181,8 @@
       "1": "Correct. That's the core iterator protocol.",
       "2": "Wrong. That's typical for iterables; iterators usually return themselves from __iter__.",
       "3": "Wrong. Most iterators are one-shot and cannot be restarted."
-    }
+    },
+    "ikm_pdf_mapping": "Python Generators and Coroutines"
   },
   {
     "topic": "Comprehensions",
@@ -1142,7 +1201,8 @@
       "1": "Wrong. Dicts cannot contain duplicate keys.",
       "2": "Wrong. Value for 2 should be 4.",
       "3": "Wrong. No error is raised."
-    }
+    },
+    "ikm_pdf_mapping": "Python Comprehensions"
   },
   {
     "topic": "Dataclasses",
@@ -1161,7 +1221,8 @@
       "1": "Correct. Frozen prevents setting attributes after init.",
       "2": "Wrong. Nested objects can still be mutated if they are mutable.",
       "3": "Wrong. Frozen dataclasses can still have defaults."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes"
   },
   {
     "topic": "Exceptions",
@@ -1180,7 +1241,8 @@
       "1": "Wrong. The exception type printed is ValueError, not Exception.",
       "2": "Wrong. else doesn't run when an exception occurs.",
       "3": "Wrong. finally always runs."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Imports",
@@ -1199,7 +1261,8 @@
       "1": "Correct. The imported name is bound directly (no module prefix needed).",
       "2": "Wrong. `import module` binds the module object only.",
       "3": "Wrong. Module code still executes on first import."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Async",
@@ -1218,7 +1281,8 @@
       "1": "Correct. await works with awaitables.",
       "2": "Wrong. Generators are not awaitables unless adapted.",
       "3": "Wrong. Threads are not awaitables by default."
-    }
+    },
+    "ikm_pdf_mapping": "Python Generators and Coroutines / Python Concurrency"
   },
   {
     "topic": "GIL",
@@ -1237,7 +1301,8 @@
       "1": "Correct. CPU-bound work doesn't gain true parallelism in threads under CPython.",
       "2": "Wrong. Multiprocessing uses multiple processes and can use multiple cores.",
       "3": "Wrong. Asyncio is cooperative; CPU work still blocks unless offloaded."
-    }
+    },
+    "ikm_pdf_mapping": "Python Concurrency"
   },
   {
     "topic": "Mutability",
@@ -1256,7 +1321,8 @@
       "1": "Wrong. The list was appended to.",
       "2": "Correct. The list inside the tuple becomes [1].",
       "3": "Wrong. list.append exists."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Descriptors",
@@ -1275,7 +1341,8 @@
       "1": "Correct. property implements the descriptor protocol.",
       "2": "Wrong. Monkey patching is unrelated.",
       "3": "Wrong. The GIL is unrelated."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Encapsulation"
   },
   {
     "topic": "OOP",
@@ -1294,7 +1361,8 @@
       "1": "Correct. A.x=1, B.x=2, instance finds B.x=2.",
       "2": "Wrong. A.x stays 1.",
       "3": "Wrong. A.x is not 2."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "Hashing",
@@ -1313,7 +1381,8 @@
       "1": "Wrong. Both are ordered sequences.",
       "2": "Correct. Mutability breaks hash invariants.",
       "3": "Wrong. Lists can contain strings."
-    }
+    },
+    "ikm_pdf_mapping": "Python Dictionaries"
   },
   {
     "topic": "Typing",
@@ -1332,7 +1401,8 @@
       "1": "Correct. Optional[int] == Union[int, None].",
       "2": "Wrong. That would be Any.",
       "3": "Wrong. Optional suggests it can be None."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Functional",
@@ -1351,7 +1421,8 @@
       "1": "Correct. Keeps truthy values: 1 and 'a'.",
       "2": "Wrong. 1 is also truthy.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Evaluation Order",
@@ -1370,7 +1441,8 @@
       "1": "Correct. True branch evaluates to x+1 (0+1).",
       "2": "Wrong. Else branch is not evaluated.",
       "3": "Wrong. Only one branch is evaluated."
-    }
+    },
+    "ikm_pdf_mapping": "Python Precedence and Associativity"
   },
   {
     "topic": "Stdlib",
@@ -1389,7 +1461,8 @@
       "1": "Wrong. isclose is designed for floating-point comparisons.",
       "2": "Wrong. This is valid usage.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Performance",
@@ -1408,7 +1481,8 @@
       "1": "Correct. Generators produce items lazily.",
       "2": "Wrong. It creates the whole list in memory.",
       "3": "Wrong. Tuples still store all items."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "MRO",
@@ -1427,7 +1501,8 @@
       "1": "Wrong. Breadth-first alone is insufficient.",
       "2": "Correct. Python uses C3 linearization for MRO.",
       "3": "Wrong. Definition order alone is not sufficient."
-    }
+    },
+    "ikm_pdf_mapping": "Python Inheritance"
   },
   {
     "topic": "MRO",
@@ -1446,7 +1521,8 @@
       "1": "Wrong. Order of bases is respected.",
       "2": "Wrong. A must come after both B and C.",
       "3": "Wrong. This hierarchy is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Inheritance"
   },
   {
     "topic": "Descriptors",
@@ -1465,7 +1541,8 @@
       "1": "Wrong. __delete__ is also part of the protocol.",
       "2": "Correct. These three define descriptor behavior.",
       "3": "Wrong. __call__ is unrelated."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Encapsulation"
   },
   {
     "topic": "Descriptors",
@@ -1484,7 +1561,8 @@
       "1": "Correct. property is implemented using descriptors.",
       "2": "Wrong. Lambdas are functions.",
       "3": "Wrong. Exception handling is unrelated."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Encapsulation"
   },
   {
     "topic": "Weak References",
@@ -1503,7 +1581,8 @@
       "1": "Wrong. weak references do not prevent GC.",
       "2": "Correct. weakref allows GC when no strong refs exist.",
       "3": "Wrong. It does not affect mutability."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Garbage Collection",
@@ -1522,7 +1601,8 @@
       "1": "Wrong. Immutability does not affect reference counting.",
       "2": "Correct. Cycles require cyclic garbage collection.",
       "3": "Wrong. Calls do not cause leaks."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Contextlib",
@@ -1541,7 +1621,8 @@
       "1": "Wrong. Though it uses yield, its purpose is context management.",
       "2": "Correct. yield splits enter and exit logic.",
       "3": "Wrong. Exception suppression is optional."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python File I/O"
   },
   {
     "topic": "Contextlib",
@@ -1560,7 +1641,8 @@
       "1": "Correct. A RuntimeError is raised.",
       "2": "Wrong. StopIteration is internal.",
       "3": "Wrong. Syntax is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python File I/O"
   },
   {
     "topic": "Functools",
@@ -1579,7 +1661,8 @@
       "1": "Wrong. Bytecode is not cached this way.",
       "2": "Wrong. It works for any function.",
       "3": "Wrong. Thread safety is not guaranteed."
-    }
+    },
+    "ikm_pdf_mapping": "Python Formatting and Decorators"
   },
   {
     "topic": "Functools",
@@ -1598,7 +1681,8 @@
       "1": "Correct. Least recently used entries are evicted.",
       "2": "Wrong. New entries are retained.",
       "3": "Wrong. Eviction prevents memory errors."
-    }
+    },
+    "ikm_pdf_mapping": "Python Formatting and Decorators"
   },
   {
     "topic": "Itertools",
@@ -1617,7 +1701,8 @@
       "1": "Wrong. combinations creates tuples.",
       "2": "Wrong. product computes Cartesian products.",
       "3": "Wrong. chain concatenates iterables."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Itertools",
@@ -1636,7 +1721,8 @@
       "1": "Correct. It produces an infinite sequence.",
       "2": "Wrong. It yields values lazily.",
       "3": "Wrong. It never stops."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Memory",
@@ -1655,7 +1741,8 @@
       "1": "Correct. Tuples are compact and immutable.",
       "2": "Wrong. Sets require hashing overhead.",
       "3": "Wrong. Dicts store key-value pairs."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "CPython Internals",
@@ -1674,7 +1761,8 @@
       "1": "Correct. Bytecode is run by the Python virtual machine.",
       "2": "Wrong. Assembly is lower-level.",
       "3": "Wrong. Bytecode is compiled from source."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Asyncio",
@@ -1693,7 +1781,8 @@
       "1": "Correct. The event loop schedules and runs async tasks cooperatively.",
       "2": "Wrong. The OS scheduler is unchanged.",
       "3": "Wrong. Asyncio does not speed up CPU-bound work."
-    }
+    },
+    "ikm_pdf_mapping": "Python Concurrency"
   },
   {
     "topic": "Asyncio",
@@ -1712,7 +1801,8 @@
       "1": "Wrong. This is syntactically valid.",
       "2": "Correct. Calling returns a coroutine object.",
       "3": "Wrong. Nothing runs yet."
-    }
+    },
+    "ikm_pdf_mapping": "Python Concurrency"
   },
   {
     "topic": "Asyncio",
@@ -1731,7 +1821,8 @@
       "1": "Wrong. This function does not exist.",
       "2": "Correct. asyncio.run() is the recommended entry point.",
       "3": "Wrong. This function does not exist."
-    }
+    },
+    "ikm_pdf_mapping": "Python Concurrency"
   },
   {
     "topic": "Typing",
@@ -1750,7 +1841,8 @@
       "1": "Wrong. Protocols avoid nominal inheritance.",
       "2": "Correct. Protocols enable structural (duck-typed) subtyping.",
       "3": "Wrong. Protocols formalize duck typing."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Typing",
@@ -1769,7 +1861,8 @@
       "1": "Wrong. They usually have no runtime cost.",
       "2": "Correct. Type hints are for tooling, not enforcement.",
       "3": "Wrong. Invalid assignments are still allowed."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Metaclasses",
@@ -1788,7 +1881,8 @@
       "1": "Correct. Metaclasses control class creation.",
       "2": "Wrong. Imports may trigger class definition, but not always.",
       "3": "Wrong. __init__ refers to instances."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes"
   },
   {
     "topic": "Metaclasses",
@@ -1807,7 +1901,8 @@
       "1": "Wrong. cls refers to the metaclass itself.",
       "2": "Correct. bases contains base classes of the new class.",
       "3": "Wrong. locals are passed as a dict, not as this name."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes"
   },
   {
     "topic": "Imports",
@@ -1826,7 +1921,8 @@
       "1": "Wrong. builtins is separate.",
       "2": "Correct. sys.modules caches loaded modules.",
       "3": "Wrong. __all__ controls export behavior."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Imports",
@@ -1845,7 +1941,8 @@
       "1": "Wrong. It can be re-imported.",
       "2": "Correct. The next import reloads the module.",
       "3": "Wrong. This is safe (though advanced)."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Multiprocessing",
@@ -1864,7 +1961,8 @@
       "1": "Correct. Each process has its own GIL.",
       "2": "Wrong. Bytecode is unchanged.",
       "3": "Wrong. Async IO is unrelated."
-    }
+    },
+    "ikm_pdf_mapping": "Python Concurrency"
   },
   {
     "topic": "Multiprocessing",
@@ -1883,7 +1981,8 @@
       "1": "Wrong. Mutable objects can be pickled.",
       "2": "Correct. Objects are serialized via pickle.",
       "3": "Wrong. Thread safety is unrelated."
-    }
+    },
+    "ikm_pdf_mapping": "Python Concurrency"
   },
   {
     "topic": "Collections",
@@ -1902,7 +2001,8 @@
       "1": "Correct. Missing keys are created automatically.",
       "2": "Wrong. defaultdict is not thread-safe.",
       "3": "Wrong. Order depends on insertion."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Collections",
@@ -1921,7 +2021,8 @@
       "1": "Correct. Deque is optimized for both ends.",
       "2": "Wrong. Deque does not sort.",
       "3": "Wrong. Memory usage varies."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Evaluation",
@@ -1940,7 +2041,8 @@
       "1": "Correct. Logical operators may skip evaluation.",
       "2": "Wrong. Evaluation is sequential.",
       "3": "Wrong. Exceptions are not suppressed."
-    }
+    },
+    "ikm_pdf_mapping": "Python Precedence and Associativity"
   },
   {
     "topic": "Evaluation",
@@ -1959,7 +2061,8 @@
       "1": "Wrong. Short-circuit prevents evaluation.",
       "2": "Wrong. The result is False.",
       "3": "Wrong. False and anything is False."
-    }
+    },
+    "ikm_pdf_mapping": "Python Precedence and Associativity"
   },
   {
     "topic": "Performance",
@@ -1978,7 +2081,8 @@
       "1": "Wrong. Tuple membership is O(n).",
       "2": "Correct. Set membership is O(1) average case.",
       "3": "Wrong. Strings require scanning."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Security",
@@ -1997,7 +2101,8 @@
       "1": "Wrong. eval can evaluate expressions.",
       "2": "Correct. eval executes arbitrary code.",
       "3": "Wrong. Memory leaks are not the main concern."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Security",
@@ -2016,7 +2121,8 @@
       "1": "Wrong. compile does not restrict execution.",
       "2": "Correct. literal_eval safely parses literals only.",
       "3": "Wrong. globals exposes namespace."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Basics",
@@ -2035,7 +2141,8 @@
       "1": "Correct. // is floor division, so 7//2 is 3.",
       "2": "Wrong. Floor division rounds down.",
       "3": "Wrong. No exception."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2054,7 +2161,8 @@
       "1": "Correct. 7 mod 2 is 1.",
       "2": "Wrong. That's the divisor.",
       "3": "Wrong. That's too large for a remainder."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2073,7 +2181,8 @@
       "1": "Wrong. bool is a distinct type (though it's a subclass of int).",
       "2": "Wrong. It's not a string.",
       "3": "Wrong. No exception."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2092,7 +2201,8 @@
       "1": "Wrong. That's (2**3)**2.",
       "2": "Wrong. That's 2**4.",
       "3": "Wrong. This is valid syntax."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2111,7 +2221,8 @@
       "1": "Correct. String concatenation joins them with no extra characters.",
       "2": "Wrong. No space is inserted automatically.",
       "3": "Wrong. Concatenation of str is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2130,7 +2241,8 @@
       "1": "Wrong. It repeats, it doesn't append the number.",
       "2": "Wrong. print shows the value, not repr with quotes.",
       "3": "Wrong. str * int is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2149,7 +2261,8 @@
       "1": "Wrong. There is only one None object.",
       "2": "Wrong. This is consistent.",
       "3": "Wrong. No exception."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2168,7 +2281,8 @@
       "1": "Correct. Empty string is falsy.",
       "2": "Wrong. bool returns True/False.",
       "3": "Wrong. No exception."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2187,7 +2301,8 @@
       "1": "Wrong. Octal requires base=8 or 0o prefix.",
       "2": "Wrong. '010' is valid decimal.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2206,7 +2321,8 @@
       "1": "Correct. Floor division of ints produces an int.",
       "2": "Wrong. It's an int, not bool.",
       "3": "Wrong. No exception."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Truthiness",
@@ -2225,7 +2341,8 @@
       "1": "Correct. An empty dict is falsy.",
       "2": "Wrong. bool({}) is valid.",
       "3": "Wrong. bool returns True/False."
-    }
+    },
+    "ikm_pdf_mapping": "Python Control Flow"
   },
   {
     "topic": "Truthiness",
@@ -2244,7 +2361,8 @@
       "1": "Correct. [] is falsy, but it is not equal to False.",
       "2": "Wrong. Comparison is allowed.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Control Flow"
   },
   {
     "topic": "Basics",
@@ -2263,7 +2381,8 @@
       "1": "Wrong. Both comparisons are True.",
       "2": "Wrong. This is valid.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2282,7 +2401,8 @@
       "1": "Correct. It's (1<2) and (2>3); second part is False.",
       "2": "Wrong. Valid syntax.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Truthiness",
@@ -2302,7 +2422,8 @@
       "1": "Wrong. Non-empty set is truthy.",
       "2": "Correct. 0.0 is falsy (numeric zero).",
       "3": "Wrong. Non-empty strings are truthy."
-    }
+    },
+    "ikm_pdf_mapping": "Python Control Flow"
   },
   {
     "topic": "Basics",
@@ -2321,7 +2442,8 @@
       "1": "Correct. Different types; no implicit conversion for ==.",
       "2": "Wrong. Comparing different types is allowed; it just returns False.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2340,7 +2462,8 @@
       "1": "Correct. '5' + '5' becomes '55'.",
       "2": "Wrong. print doesn't add quotes.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2359,7 +2482,8 @@
       "1": "Wrong. They are numerically equal.",
       "2": "Wrong. Comparison is valid.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2378,7 +2502,8 @@
       "1": "Wrong. It can be True in CPython for small ints.",
       "2": "Correct. Small integer interning can make this True, but it's not guaranteed by the language spec.",
       "3": "Wrong. No exception."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Basics",
@@ -2397,7 +2522,8 @@
       "1": "Wrong. Order is / then //.",
       "2": "Wrong. 5/2 is 2.5 not 2.0.",
       "3": "Wrong. No exception."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Data Structures",
@@ -2416,7 +2542,8 @@
       "1": "Correct. & is set intersection.",
       "2": "Wrong. 4 isn't in both sets.",
       "3": "Wrong. Set intersection is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2435,7 +2562,8 @@
       "1": "Correct. After assignment, d['b'] is 2.",
       "2": "Wrong. The key exists.",
       "3": "Wrong. Direct indexing returns the value, not None."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2454,7 +2582,8 @@
       "1": "Wrong. Dict keys are unique; duplicates collapse.",
       "2": "Wrong. No error; last assignment wins.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2473,7 +2602,8 @@
       "1": "Correct. .values() yields the values.",
       "2": "Wrong. That's items().",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2492,7 +2622,8 @@
       "1": "Wrong. That's middle element.",
       "2": "Correct. -1 indexes the last element.",
       "3": "Wrong. -1 is valid index."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2511,7 +2642,8 @@
       "1": "Correct. pop() removes and returns the last element.",
       "2": "Wrong. It removes from the end by default.",
       "3": "Wrong. pop() is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2530,7 +2662,8 @@
       "1": "Wrong. pop(0) targets index 0, not the end.",
       "2": "Wrong. It removes the element, it doesn't keep it.",
       "3": "Wrong. Index 0 exists."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2549,7 +2682,8 @@
       "1": "Correct. set() creates an empty set.",
       "2": "Wrong. This is a non-empty set.",
       "3": "Wrong. { } is the same as {}, an empty dict."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2568,7 +2702,8 @@
       "1": "Correct. tuple(...) converts the list into a tuple.",
       "2": "Wrong. That's a set literal.",
       "3": "Wrong. This conversion is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2587,7 +2722,8 @@
       "1": "Wrong. They are equal.",
       "2": "Wrong. Comparison is valid.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2606,7 +2742,8 @@
       "1": "Correct. copy() makes a shallow copy of the dict, so y keeps the old value for that key.",
       "2": "Wrong. Key exists in y.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2625,7 +2762,8 @@
       "1": "Correct. copy() is shallow; both dicts share the same inner list.",
       "2": "Wrong. append is valid.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2644,7 +2782,8 @@
       "1": "Correct. - is set difference: remove elements in the right set.",
       "2": "Wrong. 2 is removed.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Data Structures",
@@ -2663,7 +2802,8 @@
       "1": "Wrong. Union includes 1.",
       "2": "Correct. | is set union.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples / Python Dictionaries"
   },
   {
     "topic": "Strings",
@@ -2682,7 +2822,8 @@
       "1": "Wrong. uppercases all letters.",
       "2": "Wrong. It changes case.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2701,7 +2842,8 @@
       "1": "Wrong. 0 would mean found at start.",
       "2": "Wrong. 1 would mean found at index 1.",
       "3": "Wrong. find does not raise; index() would."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2720,7 +2862,8 @@
       "1": "Correct. split returns a list of strings.",
       "2": "Wrong. split produces a list.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings/Bytes",
@@ -2739,7 +2882,8 @@
       "1": "Wrong. It's bytes, not str.",
       "2": "Wrong. print shows b'' for bytes.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings/Bytes",
@@ -2758,7 +2902,8 @@
       "1": "Correct. encode converts str -> bytes.",
       "2": "Wrong. bytes(s) requires an encoding unless s is already bytes.",
       "3": "Wrong. str(s) stays a str."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2777,7 +2922,8 @@
       "1": "Wrong. Formatting rounds/truncates to 2 decimals.",
       "2": "Wrong. 3.14159 rounds to 3.14, not 3.15.",
       "3": "Wrong. f-strings are valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2796,7 +2942,8 @@
       "1": "Wrong. That replaces two l's.",
       "2": "Wrong. That replaces all l's.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2815,7 +2962,8 @@
       "1": "Correct. strip removes surrounding whitespace; print shows x.",
       "2": "Wrong. strip removes whitespace.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2834,7 +2982,8 @@
       "1": "Correct. Step -1 reverses the string.",
       "2": "Wrong. That's not full reverse.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2853,7 +3002,8 @@
       "1": "Wrong. 'exam' contains 'x'.",
       "2": "Wrong. This is valid.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Regex",
@@ -2872,7 +3022,8 @@
       "1": "Wrong. search returns one match or None.",
       "2": "Correct. re.finditer returns an iterator of match objects.",
       "3": "Wrong. findall returns strings/tuples, not match objects."
-    }
+    },
+    "ikm_pdf_mapping": "Python Regular Expression Usage"
   },
   {
     "topic": "Strings",
@@ -2891,7 +3042,8 @@
       "1": "Correct. UTF-8 encodes \u03c0 to the byte sequence \\xcf\\x80.",
       "2": "Wrong. bytes display escapes for non-ASCII.",
       "3": "Wrong. UTF-8 can encode \u03c0."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2910,7 +3062,8 @@
       "1": "Correct. splitlines splits on line boundaries.",
       "2": "Wrong. There is no trailing newline.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2929,7 +3082,8 @@
       "1": "Wrong. 'a' is a prefix of 'aa', so it compares smaller.",
       "2": "Wrong. Valid comparison.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2948,7 +3102,8 @@
       "1": "Wrong. print doesn't include quotes.",
       "2": "Wrong. Placeholder is replaced.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2967,7 +3122,8 @@
       "1": "Wrong. It returns a tuple.",
       "2": "Wrong. It splits at the separator.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -2986,7 +3142,8 @@
       "1": "Wrong. That's partition, not rpartition.",
       "2": "Wrong. There's content after the last comma.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -3005,7 +3162,8 @@
       "1": "Correct. Repeating zero times yields empty string.",
       "2": "Wrong. It doesn't stringify the multiplier.",
       "3": "Wrong. Valid operation."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Strings",
@@ -3024,7 +3182,8 @@
       "1": "Wrong. 'abc' does start with 'a'.",
       "2": "Wrong. This is valid.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Strings"
   },
   {
     "topic": "Functions",
@@ -3043,7 +3202,8 @@
       "1": "Wrong. That happens with a mutable default list.",
       "2": "Wrong. First call appends 1.",
       "3": "Wrong. Valid code."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Scope",
@@ -3062,7 +3222,8 @@
       "1": "Correct. global makes assignment affect the module-level x.",
       "2": "Wrong. No read-before-assign issue.",
       "3": "Wrong. x exists."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Scope",
@@ -3081,7 +3242,8 @@
       "1": "Correct. nonlocal rebinds x in the enclosing scope to 'b'.",
       "2": "Wrong. nonlocal prevents that error.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Exceptions",
@@ -3100,7 +3262,8 @@
       "1": "Wrong. It fails to parse.",
       "2": "Wrong. else only runs if no exception.",
       "3": "Wrong. ValueError is raised, not TypeError."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Exceptions",
@@ -3119,7 +3282,8 @@
       "1": "Wrong. try also prints.",
       "2": "Correct. finally always runs after the try block.",
       "3": "Wrong. Both print."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Exceptions",
@@ -3138,7 +3302,8 @@
       "1": "Wrong. except prints z too.",
       "2": "Wrong. finally always runs.",
       "3": "Wrong. Exception is handled."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Exceptions",
@@ -3157,7 +3322,8 @@
       "1": "Wrong. Printing args[0] prints k (no quotes).",
       "2": "Wrong. It's handled.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Functions",
@@ -3176,7 +3342,8 @@
       "1": "Wrong. There are 3.",
       "2": "Correct. *args collects positional arguments into a tuple of length 3.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Functions",
@@ -3195,7 +3362,8 @@
       "1": "Wrong. 'x' is present.",
       "2": "Wrong. This is valid.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Functions",
@@ -3214,7 +3382,8 @@
       "1": "Correct. The lambda is called with 2 and returns 3.",
       "2": "Wrong. Valid call.",
       "3": "Wrong. It's invoked, so it prints the result."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Functions",
@@ -3233,7 +3402,8 @@
       "1": "Wrong. This call respects positional-only params.",
       "2": "Wrong. Order is (a,b,c).",
       "3": "Wrong. This is valid Python 3.8+ syntax."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Functions",
@@ -3252,7 +3422,8 @@
       "1": "Correct. b is keyword-only, so passing it positionally raises TypeError.",
       "2": "Wrong. Definition is valid.",
       "3": "Wrong. Not string concatenation."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Exceptions",
@@ -3271,7 +3442,8 @@
       "1": "Wrong. It's handled by except.",
       "2": "Wrong. It prints missing.",
       "3": "Wrong. The error is KeyError."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Exceptions",
@@ -3290,7 +3462,8 @@
       "1": "Correct. No exception occurs, so else runs.",
       "2": "Wrong. except won't run.",
       "3": "Wrong. else prints."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   },
   {
     "topic": "Scope",
@@ -3309,7 +3482,8 @@
       "1": "Correct. f reads the global name x at call time; x is 2 then.",
       "2": "Wrong. No local assignment in f.",
       "3": "Wrong. x exists."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Scope",
@@ -3328,7 +3502,8 @@
       "1": "Wrong. x is captured in the closure.",
       "2": "Wrong. x is assigned before use.",
       "3": "Wrong. h() calls g and returns 1."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Closures",
@@ -3347,7 +3522,8 @@
       "1": "Wrong. nonlocal is for assignment to an enclosing binding.",
       "2": "Wrong. global doesn't create per-iteration bindings.",
       "3": "Wrong. i is an int and has no copy() effect here."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Functions"
   },
   {
     "topic": "Stdlib",
@@ -3366,7 +3542,8 @@
       "1": "Wrong. islice(..., 3) takes 3 items.",
       "2": "Wrong. It starts from 10.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Itertools",
@@ -3385,7 +3562,8 @@
       "1": "Wrong. It doesn't nest lists.",
       "2": "Wrong. It yields elements, not sublists.",
       "3": "Wrong. Valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Itertools",
@@ -3404,7 +3582,8 @@
       "1": "Wrong. That's not all pairs.",
       "2": "Wrong. It pairs elements across iterables.",
       "3": "Wrong. Valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -3423,7 +3602,8 @@
       "1": "Correct. floor rounds toward negative infinity; floor(-1.2) is -2.",
       "2": "Wrong. Sign is negative.",
       "3": "Wrong. Valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -3442,7 +3622,8 @@
       "1": "Wrong. That would be round-half-up, not Python's default.",
       "2": "Wrong. round returns an int here.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -3461,7 +3642,8 @@
       "1": "Wrong. Order is (quotient, remainder).",
       "2": "Wrong. It computes quotient and remainder.",
       "3": "Wrong. Valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Typing",
@@ -3480,7 +3662,8 @@
       "1": "Wrong. That's [] syntax.",
       "2": "Wrong. Type hints don't enforce at runtime by default.",
       "3": "Wrong. It's valid in 3.9+."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Typing",
@@ -3499,7 +3682,8 @@
       "1": "Wrong. x is None.",
       "2": "Wrong. No exception.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Asyncio",
@@ -3518,7 +3702,8 @@
       "1": "Wrong. It doesn't run until awaited.",
       "2": "Wrong. It isn't a Task unless scheduled.",
       "3": "Wrong. It's a coroutine object, not a function."
-    }
+    },
+    "ikm_pdf_mapping": "Python Concurrency"
   },
   {
     "topic": "OOP",
@@ -3537,7 +3722,8 @@
       "1": "Wrong. x was created.",
       "2": "Wrong. hasattr works here.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "OOP",
@@ -3556,7 +3742,8 @@
       "1": "Correct. print uses __str__ or falls back to __repr__.",
       "2": "Wrong. Valid.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "OOP",
@@ -3575,7 +3762,8 @@
       "1": "Wrong. It yields two items.",
       "2": "Wrong. list() can iterate it.",
       "3": "Wrong. It iterates, not wraps."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "Dataclasses",
@@ -3594,7 +3782,8 @@
       "1": "Wrong. It prints the value 1.",
       "2": "Wrong. This is valid.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes"
   },
   {
     "topic": "Stdlib",
@@ -3613,7 +3802,8 @@
       "1": "Wrong. On Windows it may display backslashes; but in many environments it's 'a/b'.",
       "2": "Wrong. It's a Path, not a tuple.",
       "3": "Wrong. Valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -3632,7 +3822,8 @@
       "1": "Correct. Counter counts occurrences; 'a' appears twice.",
       "2": "Wrong. There are only two.",
       "3": "Wrong. Missing keys default to 0, and this key exists."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -3651,7 +3842,8 @@
       "1": "Wrong. Default is int(), which is 0.",
       "2": "Wrong. defaultdict doesn't raise for missing keys.",
       "3": "Wrong. Valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -3670,7 +3862,8 @@
       "1": "Correct. dt.date.today() returns a date object.",
       "2": "Wrong. That's dt.time.",
       "3": "Wrong. It's not a string."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Security",
@@ -3689,7 +3882,8 @@
       "1": "Correct. shell=True can interpret input via a shell, increasing injection risk with untrusted strings.",
       "2": "Wrong. It still executes commands.",
       "3": "Wrong. asyncio isn't required."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Testing",
@@ -3708,7 +3902,8 @@
       "1": "Correct. setUp runs before each test method.",
       "2": "Wrong. That's tearDown.",
       "3": "Wrong. It's for all tests."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Performance",
@@ -3727,7 +3922,8 @@
       "1": "Correct. Set membership is O(1) average; list is O(n).",
       "2": "Wrong. Different algorithms.",
       "3": "Wrong. Not OS-dependent in that way."
-    }
+    },
+    "ikm_pdf_mapping": "Python Functional Programming"
   },
   {
     "topic": "Numerics",
@@ -3746,7 +3942,8 @@
       "1": "Wrong. They compare equal by value.",
       "2": "Wrong. Valid comparison.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Numerics",
@@ -3765,7 +3962,8 @@
       "1": "Wrong. With Decimal strings, this is exact.",
       "2": "Wrong. Valid.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python Control Flow / Python Precedence and Associativity"
   },
   {
     "topic": "Bitwise",
@@ -3784,7 +3982,8 @@
       "1": "Wrong. That's 5 & 4 style outcome.",
       "2": "Wrong. That's OR (|) result.",
       "3": "Wrong. Valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Precedence and Associativity"
   },
   {
     "topic": "Bitwise",
@@ -3803,7 +4002,8 @@
       "1": "Wrong. That's XOR for 1? no.",
       "2": "Wrong. Not AND.",
       "3": "Wrong. Valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Precedence and Associativity"
   },
   {
     "topic": "Comprehensions",
@@ -3822,7 +4022,8 @@
       "1": "Wrong. Those are odd squares.",
       "2": "Wrong. Filter keeps only evens.",
       "3": "Wrong. Valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Comprehensions"
   },
   {
     "topic": "Generators",
@@ -3841,7 +4042,8 @@
       "1": "Wrong. 0 was already consumed.",
       "2": "Wrong. First next(g) yields 0, not 1.",
       "3": "Wrong. It isn't exhausted after one next."
-    }
+    },
+    "ikm_pdf_mapping": "Python Generators and Coroutines"
   },
   {
     "topic": "Stdlib",
@@ -3860,7 +4062,8 @@
       "1": "Wrong. print doesn't include quotes.",
       "2": "Wrong. That's the JSON literal representation.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "Stdlib",
@@ -3879,7 +4082,8 @@
       "1": "Wrong. It returns float.",
       "2": "Wrong. Valid.",
       "3": "Wrong. Deterministic for type."
-    }
+    },
+    "ikm_pdf_mapping": "Python Modules and Imports"
   },
   {
     "topic": "OOP",
@@ -3898,7 +4102,8 @@
       "1": "Wrong. B doesn't override f.",
       "2": "Wrong. No concatenation occurs.",
       "3": "Wrong. Method exists via inheritance."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "References",
@@ -3917,7 +4122,8 @@
       "1": "Correct. x + [3] creates a new list and rebinds x; y still points to the original [1,2].",
       "2": "Wrong. y references the original list.",
       "3": "Wrong. This is valid."
-    }
+    },
+    "ikm_pdf_mapping": "Python Lists and Tuples"
   },
   {
     "topic": "File IO",
@@ -3936,7 +4142,8 @@
       "1": "Wrong. The context manager closes the file.",
       "2": "Wrong. Accessing f.closed is valid.",
       "3": "Wrong. Behavior is deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "Core Python File I/O"
   },
   {
     "topic": "Regex",
@@ -3955,7 +4162,8 @@
       "1": "Wrong. Results are strings, not ints.",
       "2": "Wrong. Regex targets digits.",
       "3": "Wrong. Valid regex usage."
-    }
+    },
+    "ikm_pdf_mapping": "Python Regular Expression Usage"
   },
   {
     "topic": "Concurrency",
@@ -3974,7 +4182,8 @@
       "1": "Wrong. Still CPU-bound.",
       "2": "Correct. I/O-bound threads can overlap waiting time.",
       "3": "Wrong. CPU-bound."
-    }
+    },
+    "ikm_pdf_mapping": "Python Concurrency"
   },
   {
     "topic": "Comprehensions",
@@ -3993,7 +4202,8 @@
       "1": "Wrong. Missing pairs.",
       "2": "Wrong. That's diagonal only.",
       "3": "Wrong. Valid comprehension."
-    }
+    },
+    "ikm_pdf_mapping": "Python Comprehensions"
   },
   {
     "topic": "Decorators",
@@ -4012,7 +4222,8 @@
       "1": "Correct. wraps copies metadata from the wrapped function.",
       "2": "Wrong. Recursion is unrelated.",
       "3": "Wrong. Thread safety is unrelated."
-    }
+    },
+    "ikm_pdf_mapping": "Python Formatting and Decorators"
   },
   {
     "topic": "Generators",
@@ -4031,7 +4242,8 @@
       "1": "Correct. send(value) resumes a generator and injects a value.",
       "2": "Wrong. next sends None.",
       "3": "Wrong. throw raises an exception inside the generator."
-    }
+    },
+    "ikm_pdf_mapping": "Python Generators and Coroutines"
   },
   {
     "topic": "OOP",
@@ -4050,7 +4262,8 @@
       "1": "Correct. __getattr__ is called only if attribute is not found.",
       "2": "Wrong. __missing__ is for dict subclasses.",
       "3": "Wrong. Not a Python hook."
-    }
+    },
+    "ikm_pdf_mapping": "Python Classes / Python Inheritance / Python Encapsulation"
   },
   {
     "topic": "Precedence",
@@ -4069,6 +4282,7 @@
       "1": "Correct. not has higher precedence than or.",
       "2": "Wrong. Valid expression.",
       "3": "Wrong. Deterministic."
-    }
+    },
+    "ikm_pdf_mapping": "General Python 3 Knowledge"
   }
 ]
