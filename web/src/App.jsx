@@ -8,6 +8,126 @@ const DONATE = {
   github: "https://github.com/sponsors/LarryChiem",
   coffee: "https://www.buymeacoffee.com/larrychiem",
 }
+const LS_SEEN = "ppe_seen_v1";
+
+function loadSeenSet() {
+  try {
+    const arr = JSON.parse(localStorage.getItem(LS_SEEN) || "[]");
+    return new Set(arr);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveSeenSet(set) {
+  localStorage.setItem(LS_SEEN, JSON.stringify([...set]));
+}
+
+
+const LS_QUEUE = "ppe_queue_v1";
+const LS_QUEUE_POS = "ppe_queue_pos_v1";
+
+function loadQueue() {
+  try {
+    const arr = JSON.parse(localStorage.getItem(LS_QUEUE) || "[]");
+    return Array.isArray(arr) ? arr : [];
+  } catch {
+    return [];
+  }
+}
+
+function loadQueuePos() {
+  const n = Number(localStorage.getItem(LS_QUEUE_POS) || "0");
+  return Number.isFinite(n) && n >= 0 ? n : 0;
+}
+
+function saveQueue(queue, pos) {
+  localStorage.setItem(LS_QUEUE, JSON.stringify(queue));
+  localStorage.setItem(LS_QUEUE_POS, String(pos));
+}
+
+function clearQueue() {
+  localStorage.removeItem(LS_QUEUE);
+  localStorage.removeItem(LS_QUEUE_POS);
+}
+
+function resetSeenProgress() {
+  localStorage.removeItem(LS_SEEN);
+  clearQueue();
+}
+
+function markSeen(questions) {
+  const seen = loadSeenSet();
+  let changed = false;
+  for (const q of questions || []) {
+    const id = qid(q);
+    if (!seen.has(id)) {
+      seen.add(id);
+      changed = true;
+    }
+  }
+  if (changed) {
+    saveSeenSet(seen);
+    clearQueue();
+  }
+  return changed;
+}
+
+function buildExam(pool, count) {
+  const desired = Math.max(1, Math.min(Number(count || pool.length), pool.length));
+  const seen = loadSeenSet();
+
+  const byId = new Map();
+  for (const q of pool) byId.set(qid(q), q);
+
+  const unseenIds = [];
+  const already = [];
+  for (const q of pool) {
+    const id = qid(q);
+    if (seen.has(id)) already.push(q);
+    else unseenIds.push(id);
+  }
+
+  const poolIdSet = new Set(byId.keys());
+  const unseenSet = new Set(unseenIds);
+
+  // Build a persistent "queue" of unseen question ids so we cover everything efficiently
+  // without repeats across sessions.
+  let queue = loadQueue().filter((id) => poolIdSet.has(id) && unseenSet.has(id));
+  if (!queue.length && unseenIds.length) queue = shuffle(unseenIds);
+
+  let pos = loadQueuePos();
+  if (!Number.isFinite(pos) || pos < 0 || pos > queue.length) pos = 0;
+
+  let pickedIds = queue.slice(pos, pos + desired);
+  pos += pickedIds.length;
+
+  // If we ran out of queued unseen, rebuild from the remaining unseen and continue.
+  if (pickedIds.length < desired && unseenIds.length > pickedIds.length) {
+    const pickedSet = new Set(pickedIds);
+    const remainingUnseen = unseenIds.filter((id) => !pickedSet.has(id));
+    queue = remainingUnseen.length ? shuffle(remainingUnseen) : [];
+    pos = 0;
+
+    const need = desired - pickedIds.length;
+    const more = queue.slice(0, need);
+    pickedIds = pickedIds.concat(more);
+    pos += more.length;
+  }
+
+  saveQueue(queue, pos);
+
+  let exam = pickedIds.map((id) => byId.get(id)).filter(Boolean);
+
+  // If still short (all unseen exhausted), fill from already-seen questions.
+  if (exam.length < desired) {
+    const pickedSet = new Set(pickedIds);
+    const fill = shuffle(already).filter((q) => !pickedSet.has(qid(q)));
+    exam = exam.concat(fill.slice(0, desired - exam.length));
+  }
+
+  return { exam, remainingUnseen: unseenIds.length };
+}
 
 function DonateBlock() {
     return (
@@ -95,6 +215,20 @@ function saveHistory(rows) {
   localStorage.setItem('ppx_history', JSON.stringify(rows))
 }
 
+function qid(q) {
+  // Prefer explicit id if present
+  if (q.id) return String(q.id);
+
+  // Deterministic fallback id from content
+  const base = JSON.stringify([q.topic ?? "", q.prompt ?? "", q.options ?? []]);
+  let h = 2166136261; // FNV-1a-ish
+  for (let i = 0; i < base.length; i++) {
+    h ^= base.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return "q_" + (h >>> 0).toString(16);
+}
+
 function LineChart({ values }) {
   if (!values?.length) return null
   const w = 320
@@ -135,9 +269,11 @@ export default function App() {
   const [startTs, setStartTs] = useState(null)
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SECONDS)
   const [history, setHistory] = useState(loadHistory())
-const [questionCount, setQuestionCount] = useState(TOTAL_QUESTIONS)
-const [selectedTopics, setSelectedTopics] = useState([]) // empty = all
-const [resumeSnapshot, setResumeSnapshot] = useState(null)
+  const [seenTick, setSeenTick] = useState(0)
+  const [seenStats, setSeenStats] = useState({ seen: 0, unseen: 0, total: 0 })
+  const [questionCount, setQuestionCount] = useState(TOTAL_QUESTIONS)
+  const [selectedTopics, setSelectedTopics] = useState([]) // empty = all
+  const [resumeSnapshot, setResumeSnapshot] = useState(null)
   const timerRef = useRef(null)
 
   useEffect(() => {
@@ -174,10 +310,8 @@ function startExam(opts = { fresh: true }) {
   }
 
   const pool = poolForSelection
-  const n = Math.max(1, Math.min(questionCount || TOTAL_QUESTIONS, pool.length))
-  const pick = shuffle(pool).slice(0, n)
-
-  setExam(pick)
+  const { exam } = buildExam(pool, questionCount)
+  setExam(exam)
   setIdx(0)
   setSelected(new Set())
   setLocked(false)
@@ -269,6 +403,21 @@ const poolForSelection = useMemo(() => {
   return unique.filter((qq) => sel.has(qq.topic))
 }, [bank, selectedTopics])
 
+useEffect(() => {
+  const pool = poolForSelection || []
+  if (!pool.length) {
+    setSeenStats({ seen: 0, unseen: 0, total: 0 })
+    return
+  }
+  const seen = loadSeenSet()
+  let seenN = 0
+  for (const qq of pool) {
+    if (seen.has(qid(qq))) seenN++
+  }
+  setSeenStats({ seen: seenN, unseen: pool.length - seenN, total: pool.length })
+}, [poolForSelection, seenTick])
+
+
 const q = exam[idx]
   const isDone = useMemo(() => {
     if (!startTs) return false
@@ -309,6 +458,8 @@ const q = exam[idx]
   function finishAndLog() {
     clearInProgress()
     setResumeSnapshot(null)
+
+    if (markSeen(exam)) setSeenTick((t) => t + 1)
 
     const durationSec = startTs ? Math.floor((Date.now() - startTs) / 1000) : 0
     const row = {
@@ -440,8 +591,23 @@ const q = exam[idx]
             <section className="history">
               <div className="historyHead">
                 <h2>Progress</h2>
-                <button className="btn ghost" onClick={exportCsv} disabled={!history.length}>Export CSV</button>
+                <div className="actions">
+                  <button className="btn ghost" onClick={exportCsv} disabled={!history.length}>Export CSV</button>
+                  <button
+                    className="btn ghost"
+                    onClick={() => {
+                      resetSeenProgress()
+                      setSeenTick((t) => t + 1)
+                    }}
+                    title="Clears which questions you've already seen so you can start a fresh coverage cycle."
+                  >
+                    Reset Seen
+                  </button>
+                </div>
               </div>
+              <p className="muted small">
+                Coverage (current filter): <b>{seenStats.seen}</b> of <b>{seenStats.total}</b> seen, <b>{seenStats.unseen}</b> new remaining.
+              </p>
               <LineChart values={scores} />
               {!history.length ? (
                 <p className="muted">No attempts yet.</p>

@@ -1463,7 +1463,7 @@
     "explanations": {
       "0": "Wrong. Descriptors can define more than __get__.",
       "1": "Wrong. __delete__ is also part of the protocol.",
-      "2": "Correct. These three define descriptor behavior.",
+      "2": "Correct. These three define descriptor behavior (a mechanism that allows customizing attribute access, assignment, and deletion in classes by defining special methods in an object). ",
       "3": "Wrong. __call__ is unrelated."
     }
   },
@@ -1481,7 +1481,7 @@
     ],
     "explanations": {
       "0": "Wrong. Iteration does not use descriptors.",
-      "1": "Correct. property is implemented using descriptors.",
+      "1": "Correct. property is implemented using descriptors (an object that implements one or more methods of the descriptor protocol — __get__(), __set__(), and __delete__()).",
       "2": "Wrong. Lambdas are functions.",
       "3": "Wrong. Exception handling is unrelated."
     }
@@ -1881,7 +1881,7 @@
     "explanations": {
       "0": "Wrong. Hashability is irrelevant.",
       "1": "Wrong. Mutable objects can be pickled.",
-      "2": "Correct. Objects are serialized via pickle.",
+      "2": "Correct. Objects are serialized via pickle (the process of serializing a Python object into a byte stream, allowing it to be saved to a file, transmitted over a network, or stored for later use).",
       "3": "Wrong. Thread safety is unrelated."
     }
   },
@@ -2098,7 +2098,7 @@
     "topic": "Basics",
     "prompt": "What does this print?\n\nprint('py' + 'thon')",
     "options": [
-      "python",
+      "python  (with trailing space)",
       "python",
       "py thon",
       "TypeError"
